@@ -2,6 +2,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ─── CURSOR (desktop only) ─── */
 const isMobile = window.matchMedia('(max-width: 767px)').matches;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lenis = window.Lenis && !prefersReducedMotion ? new Lenis({
+  lerp: isMobile ? 0.14 : 0.085,
+  wheelMultiplier: 0.9,
+  touchMultiplier: 1.15,
+  smoothWheel: true,
+  anchors: {
+    duration: 1.15,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+  },
+  prevent: node => !!node.closest('#preloader, #filmstrip, .faq-a')
+}) : null;
+
+if (lenis) {
+  lenis.stop();
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  window.lenis = lenis;
+}
+
 const cur     = document.getElementById('cur');
 const curRing = document.getElementById('curRing');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -26,6 +47,129 @@ function cursorHover(els) {
 }
 
 /* ─── PRELOADER ─── */
+function initHeroCards() {
+  const cards = gsap.utils.toArray('.hero-video-card');
+  if (!cards.length) return;
+
+  let active = 0;
+  const cardRotations = cards.map(card => parseFloat(card.style.getPropertyValue('--r')) || 0);
+  const stackState = [
+    { x: 0, y: 0, scale: 1, opacity: 1, zIndex: 8 },
+    { x: 44, y: -18, scale: .9, opacity: .76, zIndex: 6 },
+    { x: -36, y: 22, scale: .84, opacity: .58, zIndex: 4 },
+    { x: 18, y: 34, scale: .78, opacity: .38, zIndex: 2 }
+  ];
+  const activateVideo = index => {
+    cards.forEach((card, i) => {
+      const video = card.querySelector('video');
+      if (!video) return;
+      if (i === index) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  };
+
+  const getStackProps = i => {
+    const depth = (i - active + cards.length) % cards.length;
+    const state = stackState[depth] || stackState[stackState.length - 1];
+    return {
+      ...state,
+      rotation: cardRotations[i] + (depth === 0 ? 0 : depth * 1.5)
+    };
+  };
+
+  const paintStack = immediate => {
+    cards.forEach((card, i) => {
+      gsap.to(card, {
+        ...getStackProps(i),
+        duration: immediate ? 0 : .9,
+        ease: 'power3.inOut'
+      });
+    });
+  };
+
+  const startRotation = () => {
+    gsap.delayedCall(2.7, function rotateCards() {
+      const current = cards[active];
+      active = (active + 1) % cards.length;
+      const next = cards[active];
+
+      cards.forEach(card => card.classList.remove('is-active'));
+      next.classList.add('is-active');
+      activateVideo(active);
+
+      gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: () => paintStack(false) })
+        .set(next, {
+          zIndex: 9,
+          opacity: 1,
+          x: 160,
+          y: -42,
+          scale: .78,
+          rotation: cardRotations[active] + 16
+        })
+        .to(current, {
+          x: -190,
+          y: 30,
+          rotation: cardRotations[(active + cards.length - 1) % cards.length] - 18,
+          scale: .82,
+          opacity: .42,
+          duration: .85
+        }, 0)
+        .to(next, {
+          x: 0,
+          y: 0,
+          rotation: cardRotations[active],
+          scale: 1,
+          duration: 1
+        }, .06);
+
+      gsap.delayedCall(3.2, rotateCards);
+    });
+  };
+
+  gsap.set(cards, {
+    transformOrigin: '50% 55%',
+    clipPath: 'inset(0% 0% 0% 0% round 14px)'
+  });
+  activateVideo(active);
+
+  if (prefersReducedMotion) {
+    paintStack(true);
+    startRotation();
+    return;
+  }
+
+  cards.forEach((card, i) => {
+    gsap.set(card, {
+      ...getStackProps(i),
+      y: -window.innerHeight - 260 - (i * 90),
+      scale: .82,
+      opacity: 0,
+      rotation: cardRotations[i] + (i % 2 ? 22 : -22)
+    });
+  });
+
+  gsap.to(cards, {
+    x: i => getStackProps(i).x,
+    y: i => getStackProps(i).y,
+    scale: i => getStackProps(i).scale,
+    opacity: i => getStackProps(i).opacity,
+    rotation: i => getStackProps(i).rotation,
+    zIndex: i => getStackProps(i).zIndex,
+    duration: 1.45,
+    stagger: .16,
+    ease: 'bounce.out',
+    delay: .35,
+    onComplete() {
+      paintStack(true);
+      startRotation();
+    }
+  });
+}
+
 for (let i = 0; i < 9; i++) {
   const l = document.createElement('div');
   l.className = 'pl-line';
@@ -121,34 +265,41 @@ ScrollTrigger.create({
 });
 
 /* ─── REVEAL SITE ─── */
-function splitChars(el) {
-  const html = el.innerHTML;
-  // preserve <br> tags, split the rest char by char
-  el.innerHTML = html.split(/(<br\s*\/?>)/gi).map(part => {
-    if (/^<br/i.test(part)) return part;
-    return [...part].map(ch =>
-      ch === ' ' ? ' ' : `<span class="word" style="display:inline-block;overflow:hidden"><span class="char" style="display:inline-block">${ch}</span></span>`
-    ).join('');
-  }).join('');
-}
-
 function revealSite() {
+  if (lenis) {
+    lenis.start();
+    lenis.resize();
+  }
+
   gsap.to('#site', { opacity: 1, duration: .5, ease: 'power2.out' });
   gsap.to('.nav-logo',   { opacity: 1, duration: .8, ease: 'power3.out', delay: .2 });
   gsap.to('#navCenter',  { opacity: 1, duration: .8, ease: 'power3.out', delay: .3 });
   gsap.to('#navCta',     { opacity: 1, duration: .8, ease: 'power3.out', delay: .4 });
 
-  // Hero char-by-char
   const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle) splitChars(heroTitle);
-  gsap.from('.hero-title .char', { y: '110%', opacity: 0, duration: 1.1, stagger: .025, ease: 'power3.out', delay: .3 });
+  initHeroCards();
+  gsap.set('.hero-title', { '--title-spread': '.26em' });
+  gsap.from('.hero-title-word', {
+    y: 34,
+    opacity: 0,
+    duration: .9,
+    stagger: .06,
+    ease: 'power3.out',
+    delay: .2
+  });
+  gsap.to('.hero-title', {
+    '--title-spread': isMobile ? '.72em' : '2.35em',
+    duration: 1.05,
+    ease: 'power3.inOut',
+    delay: 1.9
+  });
   gsap.from('.hero-badge',       { y: 20, opacity: 0, duration: .9, ease: 'power3.out', delay: .2 });
   gsap.from('.hero-sub',         { y: 20, opacity: 0, duration: .9, ease: 'power3.out', delay: 1.1 });
   gsap.from('.hero-actions',     { y: 16, opacity: 0, duration: .8, ease: 'power3.out', delay: 1.3 });
-  gsap.from('#heroReel',         { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 1.0, scale: .97 });
+  gsap.from('#heroStatement',    { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 1.0, scale: .97 });
   gsap.to('#scrollCue',          { opacity: 1, duration: 1, ease: 'power2.out', delay: 2.2 });
 
-  cursorHover(document.querySelectorAll('a, button, .work-card, .hero-reel, .testimonial-card, .service-card, .fs-skip, .pill'));
+  cursorHover(document.querySelectorAll('a, button, .work-card, .hero-statement, .testimonial-card, .service-card, .fs-skip, .pill'));
   initScroll();
   initFAQ();
 }
@@ -182,14 +333,64 @@ function initScroll() {
   }
 
   // 3 ── HERO PARALLAX scrub — content sale e svanisce, reel zooma
+  gsap.to('.hero-title', {
+    xPercent: -14,
+    ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: '62% top', scrub: true }
+  });
+  gsap.to('#heroCardStack', {
+    x: -140,
+    y: 16,
+    rotation: -3,
+    ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: '62% top', scrub: true }
+  });
   gsap.to('.hero-content', {
     y: -80, opacity: 0, ease: 'none',
     scrollTrigger: { trigger: '.hero', start: 'top top', end: '65% top', scrub: true }
   });
-  gsap.to('#heroReel', {
-    y: 100, scale: 1.06, ease: 'none',
+  gsap.to('#heroStatement', {
+    y: 70, scale: 1.025, ease: 'none',
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
   });
+  const statement = document.getElementById('heroStatement');
+  if (statement) {
+    const windows = gsap.utils.toArray('.media-window');
+    const mediaTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.hero',
+        start: '16% top',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+    mediaTl.to('.statement-word', {
+      color: '#fff',
+      opacity: 1,
+      y: 0,
+      duration: .7,
+      stagger: { each: .025, from: 'start' },
+      ease: 'none'
+    }, 0);
+    mediaTl.to(windows, {
+      width: (_, el) => {
+        const target = parseFloat(el.dataset.open || 160);
+        return Math.min(target, window.innerWidth < 768 ? window.innerWidth * .34 : window.innerWidth * .16);
+      },
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: .75,
+      stagger: .08,
+      ease: 'power2.out'
+    }, .08);
+    mediaTl.to('.media-window img', {
+      scale: 1,
+      duration: .85,
+      stagger: .08,
+      ease: 'power2.out'
+    }, .08);
+  }
 
   // 4 ── CLIP-PATH REVEAL sui titoli di sezione (testo esce da sotto come un sipario)
   gsap.utils.toArray('.section-title').forEach(el => {

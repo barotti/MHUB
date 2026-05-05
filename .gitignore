@@ -1,0 +1,9 @@
+.tools/
+public/web/images/home/*.jpg
+public/web/images/home/*.JPG
+public/web/images/home/*.jpeg
+public/web/images/home/*.JPEG
+public/web/images/home/*.png
+public/web/images/home/*.PNG
+!public/web/images/home/optimized/
+!public/web/images/home/optimized/*.webp

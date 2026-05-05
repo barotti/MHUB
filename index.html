@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Marco Rossi — Fotografo & Videomaker</title>
   <meta name="description" content="Portfolio di Marco Rossi, fotografo e videomaker. Milano · Roma." />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260505-scroll-optimized" />
 </head>
 <body class="is-loading">
 
@@ -69,17 +70,52 @@
           <span class="badge-dot"></span>
           Disponibile per nuovi progetti · 2024
         </div>
-        <h1 class="hero-title" id="heroTitle">
-          Ogni Frame,<br>Una Storia.
-        </h1>
+        <div class="hero-title-wrap">
+          <h1 class="hero-title" id="heroTitle" aria-label="Noi siamo social media">
+            <span class="hero-title-line">
+              <span class="hero-title-word hero-title-word--left">Noi</span>
+              <span class="hero-title-word hero-title-word--right">siamo</span>
+            </span>
+            <span class="hero-title-line">
+              <span class="hero-title-word hero-title-word--left">social</span>
+              <span class="hero-title-word hero-title-word--right">media</span>
+            </span>
+          </h1>
+          <div class="hero-card-stack" id="heroCardStack" aria-hidden="true">
+            <div class="hero-video-card is-active" style="--r: -6deg; --x: -8px; --y: -4px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/damettere.mp4" type="video/mp4" />
+              </video>
+              <span>Ritratto</span>
+            </div>
+            <div class="hero-video-card" style="--r: 7deg; --x: 16px; --y: 8px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/Timeline%201.mp4" type="video/mp4" />
+              </video>
+              <span>Matrimonio</span>
+            </div>
+            <div class="hero-video-card" style="--r: -10deg; --x: 12px; --y: -12px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/copy_C02F06C8-FEAE-493E-9636-FB508B46C3B7-1.mp4" type="video/mp4" />
+              </video>
+              <span>Brand Film</span>
+            </div>
+            <div class="hero-video-card" style="--r: 4deg; --x: -18px; --y: 10px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/valerio.mp4" type="video/mp4" />
+              </video>
+              <span>Reportage</span>
+            </div>
+          </div>
+        </div>
         <p class="hero-sub">Fotografia e video di alta qualità. Racconto l'essenza di ogni momento — matrimoni, brand, ritratti e tutto ciò che merita di essere ricordato.</p>
         <div class="hero-actions">
           <a href="#work" class="btn btn-primary">Esplora il lavoro</a>
-          <a href="#reel" class="btn btn-ghost">
+          <a href="#work" class="btn btn-ghost">
             <span class="btn-play-icon">
               <svg viewBox="0 0 12 14" fill="currentColor" width="10"><polygon points="0,0 12,7 0,14"/></svg>
             </span>
-            Guarda il Reel
+            Guarda gli Scatti
           </a>
         </div>
       </div>
@@ -96,6 +132,41 @@
           <span class="reel-tag">4K · 03:24</span>
           <span class="reel-loc">Milano, Italia</span>
         </div>
+      </div>
+      <div class="hero-statement" id="heroStatement" aria-label="Contenuti che scalano i social, strategy reel, community feed e impatto">
+        <p>
+          <span class="statement-word">Contenuti</span>
+          <span class="media-window" data-open="176">
+            <img src="public/web/images/home/optimized/contenuti.webp" alt="Contenuti social" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">che</span>
+        </p>
+        <p>
+          <span class="statement-word">scalano</span>
+          <span class="statement-word">i</span>
+          <span class="statement-word">social</span>
+          <span class="media-window" data-open="176">
+            <img src="public/web/images/home/optimized/social.webp" alt="Social media content" loading="lazy" decoding="async" />
+          </span>
+        </p>
+        <p>
+          <span class="statement-word">Strategy</span>
+          <span class="media-window" data-open="184">
+            <img src="public/web/images/home/optimized/strategy.webp" alt="Strategy social" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">reel</span>
+        </p>
+        <p>
+          <span class="statement-word">Community,</span>
+          <span class="media-window" data-open="184">
+            <img src="public/web/images/home/optimized/community.webp" alt="Community e feed" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">feed</span>
+        </p>
+        <p>
+          <span class="statement-word">e</span>
+          <span class="statement-word">impatto.</span>
+        </p>
       </div>
       <div class="scroll-cue" id="scrollCue">
         <span class="scroll-cue-text">Scorri</span>
@@ -461,6 +532,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+  <script src="js/main.js?v=20260505-scroll-optimized"></script>
 </body>
 </html>
