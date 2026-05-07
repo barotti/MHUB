@@ -299,9 +299,95 @@ function revealSite() {
   gsap.from('#heroStatement',    { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 1.0, scale: .97 });
   gsap.to('#scrollCue',          { opacity: 1, duration: 1, ease: 'power2.out', delay: 2.2 });
 
-  cursorHover(document.querySelectorAll('a, button, .work-card, .hero-statement, .testimonial-card, .service-card, .fs-skip, .pill'));
+  cursorHover(document.querySelectorAll('a, button, .wh-card, .hero-statement, .testimonial-card, .service-card, .fs-skip, .pill'));
   initScroll();
   initFAQ();
+}
+
+/* ─── WORK CARD MAGNET ─── */
+function initHorizontalWork() {
+  const section = document.querySelector('.work-showcase');
+  const track   = document.getElementById('workHTrack');
+  if (!section || !track) return;
+
+  const cards = gsap.utils.toArray('.wh-card', track);
+  if (!cards.length) return;
+
+  if (isMobile) return;
+
+  let isOpen = false;
+  const closedState = [
+    { x: 0, y: 0, rotation: 0 },
+    { x: 0, y: 0, rotation: 0 },
+    { x: 0, y: 0, rotation: 0 },
+    { x: 0, y: 0, rotation: 0 },
+    { x: 0, y: 0, rotation: 0 }
+  ];
+  const openState = [
+    { x: -52, y: 0, rotation: 0 },
+    { x: -26, y: 0, rotation: 0 },
+    { x: 0, y: 0, rotation: 0 },
+    { x: 26, y: 0, rotation: 0 },
+    { x: 52, y: 0, rotation: 0 }
+  ];
+
+  const getState = card => (isOpen ? openState : closedState)[cards.indexOf(card)] || { x: 0, y: 0, rotation: 0 };
+
+  cards.forEach(card => {
+    gsap.set(card, { x: 0, y: 0, rotation: 0, scale: 1 });
+  });
+
+  const setOpen = open => {
+    isOpen = open;
+    cards.forEach(card => {
+      const state = getState(card);
+      gsap.to(card, {
+        x: state.x,
+        y: state.y,
+        rotation: state.rotation,
+        scale: 1,
+        duration: open ? .7 : .85,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      });
+    });
+  };
+
+  track.addEventListener('pointerenter', () => setOpen(true));
+
+  section.addEventListener('pointermove', event => {
+    if (!isOpen) return;
+
+    cards.forEach(card => {
+      const state = getState(card);
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = event.clientX - cx;
+      const dy = event.clientY - cy;
+      const dist = Math.hypot(dx, dy);
+      const radius = Math.min(300, Math.max(220, rect.width * 1.12));
+      const force = gsap.utils.clamp(0, 1, 1 - dist / radius);
+      const pull = force * force;
+      const x = state.x + gsap.utils.clamp(-24, 24, dx * .12 * pull);
+      const y = state.y + gsap.utils.clamp(-16, 16, dy * .10 * pull) - force * 4;
+      const rotate = state.rotation + gsap.utils.clamp(-3.2, 3.2, (x - state.x) * .045);
+
+      gsap.to(card, {
+        x,
+        y,
+        rotation: rotate,
+        scale: 1 + force * .016,
+        duration: .65,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      });
+    });
+  });
+
+  section.addEventListener('pointerleave', () => {
+    setOpen(false);
+  });
 }
 
 /* ─── SCROLL ANIMATIONS ─── */
@@ -415,22 +501,8 @@ function initScroll() {
     });
   });
 
-  // 6 ── WORK CARDS — stagger random + ogni bg ha parallax indipendente (effetto profondità)
-  gsap.from('.work-card', {
-    scrollTrigger: { trigger: '.work-grid', start: 'top 82%' },
-    y: 70, opacity: 0, scale: .93, duration: 1.1,
-    stagger: { each: .1, from: 'random' },
-    ease: 'power3.out'
-  });
-  document.querySelectorAll('.work-card').forEach(card => {
-    const bg = card.querySelector('.card-bg');
-    if (!bg) return;
-    // bg si muove più lento della card → senso di profondità
-    gsap.to(bg, {
-      y: -60, ease: 'none',
-      scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true }
-    });
-  });
+  // 6 ── WORK CARD MAGNET
+  initHorizontalWork();
 
   // 7 ── SERVICE CARDS — 3D flip-in (rotationX) + lista item a cascata
   gsap.from('.service-card', {
@@ -476,31 +548,60 @@ function initScroll() {
     });
   });
 
-  // 10 ── ABOUT — word-by-word reveal + image clip-path + badge bounce
-  const aboutTitle = document.querySelector('.about-title');
-  if (aboutTitle) {
-    const raw = aboutTitle.textContent.trim();
-    aboutTitle.innerHTML = raw.split(' ').map(
-      w => `<span style="display:inline-block;overflow:hidden"><span style="display:inline-block">${w}&nbsp;</span></span>`
-    ).join('');
-    gsap.from('.about-title span span', {
-      scrollTrigger: { trigger: aboutTitle, start: 'top 85%' },
-      y: '110%', opacity: 0, duration: .75, stagger: .07, ease: 'power3.out'
+  // 10 ── ABOUT LENS — pinned text zoom + reveal del testo personale
+  const lensSection = document.querySelector('.lens-section');
+  if (lensSection) {
+    const lensStage = lensSection.querySelector('.lens-stage');
+
+    gsap.set(lensStage, { y: 0 });
+    gsap.set('.lens-copy', { xPercent: -50, yPercent: -50, scale: .08, opacity: 0 });
+    gsap.set('.lens-title', { color: '#fff', transformOrigin: '50% 50%' });
+    gsap.set('.lens-entry-letter', { color: 'inherit' });
+    gsap.set('.lens-white-wipe', { opacity: 0 });
+    gsap.set('.lens-corner', { opacity: 1, y: 0 });
+    gsap.set('.lens-about-card', { opacity: 0, y: 64 });
+    gsap.set('.lens-about-inner > *', { opacity: 0, y: 34 });
+
+    const lensTl = gsap.timeline({ paused: true });
+    lensTl
+      .to('.lens-copy', { opacity: 1, scale: .42, duration: .18, ease: 'power2.out' }, .08)
+      .to('.lens-copy', { scale: 1, duration: .18, ease: 'power2.out' }, .24)
+      .to('.lens-copy', { scale: 17, duration: .48, ease: 'power1.inOut' }, .42)
+      .to('.lens-corner', { opacity: 0, y: -20, duration: .16, ease: 'power2.out' }, .46)
+      .to('.lens-white-wipe', { opacity: 1, duration: .12, ease: 'none' }, .86)
+      .to('.lens-stage', { backgroundColor: '#f6f4ee', duration: .12, ease: 'none' }, .86)
+      .to('.lens-copy', { opacity: 0, duration: .08, ease: 'power2.out' }, .92)
+      .to('.lens-noise', { opacity: 0, duration: .14, ease: 'none' }, .92)
+      .to('.lens-about-card', { opacity: 1, y: 0, duration: .2, ease: 'power3.out' }, .98)
+      .to('.lens-about-inner > *', { opacity: 1, y: 0, duration: .24, stagger: .05, ease: 'power2.out' }, 1.03);
+
+    ScrollTrigger.create({
+      trigger: lensSection,
+      start: 'top top',
+      end: () => `+=${window.innerHeight * 3}`,
+      invalidateOnRefresh: true,
+      onEnter: () => {
+        gsap.set(lensStage, { autoAlpha: 1 });
+      },
+      onEnterBack: () => {
+        gsap.set(lensStage, { autoAlpha: 1 });
+      },
+      onLeave: () => {
+        gsap.set(lensStage, { autoAlpha: 0 });
+      },
+      onLeaveBack: () => {
+        gsap.set(lensStage, { y: 0, autoAlpha: 1 });
+        lensTl.progress(0);
+      },
+      onUpdate: self => {
+        const travel = self.end - self.start;
+        const y = gsap.utils.clamp(0, travel, self.scroll() - self.start);
+
+        gsap.set(lensStage, { y });
+        lensTl.progress(self.progress);
+      }
     });
   }
-  gsap.from(['.about-body', '.about-btn'], {
-    scrollTrigger: { trigger: '.about-section', start: 'top 76%' },
-    y: 28, opacity: 0, duration: .9, stagger: .14, ease: 'power3.out', delay: .35
-  });
-  gsap.from('.about-img', {
-    scrollTrigger: { trigger: '.about-img-wrap', start: 'top 82%' },
-    clipPath: 'inset(100% 0 0 0)', duration: 1.3, ease: 'power4.out'
-  });
-  gsap.from('.about-badge', {
-    scrollTrigger: { trigger: '.about-img-wrap', start: 'top 70%' },
-    scale: .4, opacity: 0, rotation: -10,
-    duration: .9, ease: 'back.out(2.8)', delay: .6
-  });
 
   // 11 ── TESTIMONIALS — asimmetrici: sinistra/centro/destra con leggera rotazione
   gsap.from('.testimonial-card:nth-child(1)', {
