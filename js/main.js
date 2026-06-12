@@ -507,13 +507,12 @@ function initScroll() {
   // 7 ── SERVICE CARDS — 3D flip-in (rotationX) + lista item a cascata
   gsap.from('.service-card', {
     scrollTrigger: { trigger: '.services-grid', start: 'top 82%' },
-    y: 50, opacity: 0,
-    rotationX: 14, transformPerspective: 1200, transformOrigin: 'top center',
-    duration: 1.1, stagger: .15, ease: 'power3.out'
+    x: -46, opacity: 0,
+    duration: .85, stagger: .07, ease: 'power3.out'
   });
-  gsap.from('.service-list li', {
+  gsap.from('.service-tags span', {
     scrollTrigger: { trigger: '.services-grid', start: 'top 72%' },
-    x: -20, opacity: 0, duration: .55, stagger: .04, ease: 'power2.out', delay: .4
+    y: 10, opacity: 0, duration: .45, stagger: .025, ease: 'power2.out', delay: .25
   });
 
   // 8 ── PILLS — bouncy scale-in a onda
