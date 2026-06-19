@@ -921,19 +921,19 @@ a { color: inherit; text-decoration: none; }
 .lens-about-card {
   position: absolute;
   left: 50%;
-  top: 56%;
+  top: 30%;
   width: min(1160px, 86vw);
   transform: translate(-50%, -50%);
   z-index: 6;
   opacity: 0;
 }
 .lens-about-inner {
-  display: grid;
-  grid-template-columns: .72fr 1.28fr;
-  align-items: start;
-  gap: clamp(28px, 5vw, 84px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3vw, 36px);
   padding: 0;
-  text-align: left;
+  text-align: center;
   color: #080808;
 }
 .lens-about-kicker {
@@ -944,24 +944,23 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 .lens-about-lead {
-  max-width: 760px;
+  max-width: 900px;
   font-size: clamp(32px, 4.25vw, 64px);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -.03em;
 }
 .lens-about-text {
-  max-width: 660px;
+  max-width: 680px;
   font-size: clamp(15px, 1.3vw, 18px);
   line-height: 1.65;
   color: rgba(0,0,0,.62);
-  grid-column: 2;
 }
 .lens-about-meta {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
-  grid-column: 2;
   margin-top: 4px;
 }
 .lens-about-meta span {
@@ -1279,7 +1278,7 @@ a { color: inherit; text-decoration: none; }
   .lens-eyebrow { font-size: 9px; margin-bottom: 16px; }
   .lens-corner { top: 86px; left: 24px; font-size: 9px; }
   .lens-copy { top: 50%; }
-  .lens-about-card { width: 88vw; top: 55%; }
+  .lens-about-card { width: 88vw; top: 30%; }
   .lens-about-inner { display: flex; flex-direction: column; gap: 20px; }
   .lens-about-lead { font-size: clamp(25px, 8vw, 42px); }
   .lens-about-text,
