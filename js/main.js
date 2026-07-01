@@ -180,6 +180,9 @@ const plCountNum = document.getElementById('plCountNum');
 const plCountPct = document.getElementById('plCountPct');
 const count      = { v: 0 };
 
+if (document.getElementById('preloader').style.display === 'none') {
+  revealSite();
+} else {
 gsap.from('.pl-name-word span', { y: '110%', opacity: 0, duration: 1, ease: 'power3.out', stagger: .12, delay: .15 });
 gsap.to('.pl-line', { width: '100%', duration: 1.6, ease: 'power2.inOut', stagger: .07, delay: .2 });
 gsap.to(count, {
@@ -255,6 +258,7 @@ function endFilmstrip() {
     revealSite();
   }});
 }
+} // end else (preloader enabled)
 
 /* ─── NAV SCROLL ─── */
 ScrollTrigger.create({
