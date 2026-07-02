@@ -223,10 +223,15 @@
   .panel-index{
     font-size:12px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;
   }
-  .panel-logo{height:64px;width:auto;margin:36px 0 auto;object-fit:contain;object-position:left;
-    filter:grayscale(1) brightness(1.1);transition:filter .5s;
+  .panel-logo{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;object-position:center;
+    opacity:.12;filter:grayscale(1) brightness(.8);
+    transition:opacity .5s,filter .5s;
+    margin:0;
   }
-  .panel:hover .panel-logo{filter:none}
+  .panel:hover .panel-logo{filter:grayscale(0) brightness(.7);opacity:.28}
+  .panel > *:not(.panel-logo){position:relative;z-index:1}
   .panel h3{
     font-family:var(--display);font-weight:600;text-transform:uppercase;
     font-size:clamp(24px,2.4vw,34px);line-height:1.1;margin-bottom:14px;
