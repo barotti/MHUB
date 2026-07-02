@@ -1,462 +1,636 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vertex Group - Studio Creativo Digitale</title>
-  <meta name="description" content="Vertex Group: video editing, short form content, social media management, graphic design, 3D, strategia, web e brand identity." />
-  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css" />
-  <link rel="stylesheet" href="css/style.css?v=20260619-about-center" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vertex — realtà italiana nata nel 2026. Un ecosistema che ridefinisce gli standard nel mondo digitale, creativo e gaming: Vertex Group, Vertex Studios, Vertex Gaming.">
+<title>Vertex — Un universo in evoluzione</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08080B;
+    --surface:#0E0E14;
+    --line:rgba(255,255,255,.08);
+    --text:#F2F1EE;
+    --muted:#8B8B95;
+    --acc-group:#DDE3EA;   /* argento — il gruppo */
+    --acc-gaming:#7C5CFF;  /* viola elettrico — gaming */
+    --acc-studios:#E4A14B; /* ambra cinematica — studios */
+    --display:'Clash Display',sans-serif;
+    --body:'Satoshi',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--acc-gaming);color:#fff}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- PRELOADER ---------- */
+  #preloader{
+    position:fixed;inset:0;z-index:1000;
+    background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+    transition:clip-path .9s cubic-bezier(.76,0,.24,1);
+    clip-path:inset(0 0 0 0);
+  }
+  #preloader.done{clip-path:inset(0 0 100% 0)}
+  #preloader .pl-logo{
+    font-family:var(--display);font-weight:600;font-size:clamp(28px,4vw,44px);
+    letter-spacing:.28em;text-transform:uppercase;
+  }
+  #preloader .pl-logo span{color:var(--muted)}
+  #preloader .pl-count{
+    font-size:13px;letter-spacing:.3em;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  #preloader .pl-bar{
+    width:min(260px,60vw);height:1px;background:var(--line);position:relative;overflow:hidden;
+  }
+  #preloader .pl-bar i{
+    position:absolute;inset:0;background:var(--text);transform:scaleX(0);transform-origin:left;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px clamp(20px,4vw,56px);
+    mix-blend-mode:difference;
+  }
+  .logo{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--display);font-weight:600;letter-spacing:.24em;font-size:15px;
+  }
+  .logo img{height:30px;width:auto}
+  nav{display:flex;gap:32px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+  nav a{opacity:.7;transition:opacity .3s}
+  nav a:hover{opacity:1}
+  .nav-cta{
+    border:1px solid rgba(255,255,255,.4);border-radius:999px;
+    padding:8px 20px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    transition:background .3s,color .3s;
+  }
+  .nav-cta:hover{background:#fff;color:#000}
+  @media(max-width:720px){ nav .nav-link{display:none} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:120px clamp(20px,4vw,56px) 0;
+    position:relative;overflow:hidden;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    margin-bottom:28px;
+  }
+  .hero-badge::before{
+    content:"";width:7px;height:7px;border-radius:50%;
+    background:#3ddc84;box-shadow:0 0 14px #3ddc84;
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{50%{opacity:.35}}
+  .hero h1{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(52px,10.5vw,158px);
+    line-height:.94;text-transform:uppercase;letter-spacing:-.01em;
+  }
+  .hero h1 .line{display:block;overflow:hidden}
+  .hero h1 .line>span{display:block}
+  .hero h1 em{
+    font-style:normal;
+    background:linear-gradient(100deg,var(--acc-group) 15%,var(--acc-gaming) 50%,var(--acc-studios) 85%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    max-width:520px;color:var(--muted);font-size:clamp(15px,1.4vw,18px);
+    margin-top:36px;
+  }
+  .hero-actions{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 30px;border-radius:999px;
+    font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;
+    border:1px solid var(--line);
+    transition:transform .3s,background .3s,color .3s,border-color .3s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn.solid{background:var(--text);color:#08080B;border-color:var(--text)}
+  .btn.solid:hover{background:#fff}
+  .btn.ghost:hover{border-color:rgba(255,255,255,.4)}
+
+  /* triangolo — tre vertici, tre brand */
+  .hero-tri{
+    position:absolute;right:clamp(-80px,2vw,80px);top:50%;
+    transform:translateY(-50%);
+    width:clamp(300px,36vw,560px);pointer-events:none;opacity:.9;
+  }
+  .hero-tri svg{width:100%;height:auto;overflow:visible}
+  .tri-shape{transform-origin:center;animation:triSpin 60s linear infinite}
+  @keyframes triSpin{to{transform:rotate(360deg)}}
+  .tri-vertex{animation:pulse 3s infinite}
+  .tri-vertex.v2{animation-delay:1s}
+  .tri-vertex.v3{animation-delay:2s}
+  @media(max-width:900px){
+    .hero-tri{position:relative;right:auto;top:auto;transform:none;margin:48px auto 0;opacity:.6}
+  }
+
+  /* marquee */
+  .marquee{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:18px 0;overflow:hidden;white-space:nowrap;
+    margin-top:auto;
+  }
+  .marquee-track{display:inline-flex;gap:0;animation:scroll 28s linear infinite}
+  .marquee span{
+    font-family:var(--display);font-size:15px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted);padding:0 28px;
+  }
+  .marquee span i{font-style:normal;color:var(--text);padding-left:56px}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ---------- SEZIONI ---------- */
+  section{padding:clamp(90px,12vw,160px) clamp(20px,4vw,56px)}
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);
+    margin-bottom:28px;
+  }
+  .eyebrow::before{content:"";width:36px;height:1px;background:var(--muted)}
+  .section-title{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(34px,5.4vw,72px);line-height:1.04;
+    text-transform:uppercase;max-width:14ch;
+  }
+
+  /* manifesto */
+  .manifesto p{
+    font-family:var(--display);font-weight:500;
+    font-size:clamp(24px,3.6vw,48px);line-height:1.25;
+    max-width:20ch;
+  }
+  .manifesto .word{opacity:.15;transition:opacity .4s}
+  .manifesto .word.on{opacity:1}
+  .manifesto strong{font-weight:600}
+  .manifesto strong.g1{color:var(--acc-group)}
+  .manifesto strong.g2{color:var(--acc-gaming)}
+  .manifesto strong.g3{color:var(--acc-studios)}
+
+  /* ---------- I NOSTRI BRAND ---------- */
+  .brands{padding-left:0;padding-right:0}
+  .brands-head{padding:0 clamp(20px,4vw,56px);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:56px}
+  .brands-head p{color:var(--muted);max-width:420px}
+  .brand-panels{
+    display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .panel{
+    --acc:var(--acc-group);
+    flex:1;min-height:clamp(480px,64vh,640px);
+    border-right:1px solid var(--line);
+    padding:48px clamp(24px,3vw,48px);
+    display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+    transition:flex .65s cubic-bezier(.65,0,.35,1),background .5s;
+    cursor:pointer;
+  }
+  .panel:first-child{border-left:1px solid var(--line)}
+  .panel::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--acc);transform:scaleX(0);transform-origin:left;
+    transition:transform .6s cubic-bezier(.65,0,.35,1);
+  }
+  .panel::after{
+    content:"";position:absolute;inset:auto -20% -35% -20%;height:60%;
+    background:radial-gradient(ellipse at center,var(--acc) 0%,transparent 70%);
+    opacity:0;transition:opacity .6s;filter:blur(40px);
+    pointer-events:none;
+  }
+  .panel:hover{flex:1.9;background:var(--surface)}
+  .panel:hover::before{transform:scaleX(1)}
+  .panel:hover::after{opacity:.16}
+  .panel.gaming{--acc:var(--acc-gaming)}
+  .panel.studios{--acc:var(--acc-studios)}
+  .panel-index{
+    font-size:12px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;
+  }
+  .panel-logo{height:64px;width:auto;margin:36px 0 auto;object-fit:contain;object-position:left;
+    filter:grayscale(1) brightness(1.1);transition:filter .5s;
+  }
+  .panel:hover .panel-logo{filter:none}
+  .panel h3{
+    font-family:var(--display);font-weight:600;text-transform:uppercase;
+    font-size:clamp(24px,2.4vw,34px);line-height:1.1;margin-bottom:14px;
+  }
+  .panel p{color:var(--muted);font-size:15px;max-width:34ch;margin-bottom:22px}
+  .panel-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+  .panel-tags span{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--muted);
+  }
+  .panel-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+    color:var(--acc);
+  }
+  .panel-cta .arrow{transition:transform .35s}
+  .panel:hover .panel-cta .arrow{transform:translate(4px,-4px)}
+  .panel-cta.here{color:var(--muted)}
+  @media(max-width:900px){
+    .brand-panels{flex-direction:column}
+    .panel{border-right:0;border-bottom:1px solid var(--line);min-height:auto;flex:none}
+    .panel:first-child{border-left:0}
+    .panel:last-child{border-bottom:0}
+    .panel:hover{flex:none}
+    .panel::before{transform:scaleX(1)}
+    .panel-logo{margin:28px 0}
+  }
+
+  /* ---------- CHI SIAMO ---------- */
+  .about-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(40px,6vw,90px);
+    align-items:start;
+  }
+  .about-grid .lead{
+    font-family:var(--display);font-weight:500;
+    font-size:clamp(20px,2.2vw,28px);line-height:1.4;margin-bottom:26px;
+  }
+  .about-grid .body-copy{color:var(--muted);margin-bottom:34px}
+  .model{list-style:none;display:flex;flex-direction:column}
+  .model li{
+    display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:baseline;
+    padding:18px 0;border-top:1px solid var(--line);
+  }
+  .model li:last-child{border-bottom:1px solid var(--line)}
+  .model b{
+    font-family:var(--display);font-weight:600;font-size:16px;
+    text-transform:uppercase;letter-spacing:.04em;
+  }
+  .model span{color:var(--muted);font-size:14px}
+  @media(max-width:560px){.model li{grid-template-columns:1fr;gap:4px}}
+  .stats{
+    display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);
+  }
+  .stat{
+    padding:clamp(24px,3vw,40px);
+    border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .stat:nth-child(2n){border-right:0}
+  .stat:nth-child(n+3){border-bottom:0}
+  .stat b{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(36px,4.4vw,60px);display:block;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat b i{font-style:normal;color:var(--muted);font-size:.6em}
+  .stat small{color:var(--muted);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+
+  /* ---------- CONTATTI ---------- */
+  .contact{text-align:center;position:relative;overflow:hidden}
+  .contact .eyebrow{justify-content:center}
+  .contact .eyebrow::after{content:"";width:36px;height:1px;background:var(--muted)}
+  .contact h2{
+    font-family:var(--display);font-weight:600;text-transform:uppercase;
+    font-size:clamp(40px,8vw,110px);line-height:1;margin-bottom:28px;
+  }
+  .contact h2 a{
+    display:inline-block;position:relative;transition:color .35s;
+  }
+  .contact h2 a::after{
+    content:"";position:absolute;left:0;bottom:6px;height:4px;width:100%;
+    background:linear-gradient(90deg,var(--acc-group),var(--acc-gaming),var(--acc-studios));
+    transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.65,0,.35,1);
+  }
+  .contact h2 a:hover::after{transform:scaleX(1)}
+  .contact p{color:var(--muted);margin-bottom:36px}
+  .contact .mail{font-size:15px;letter-spacing:.08em;color:var(--muted)}
+  .contact .mail:hover{color:#fff}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:56px clamp(20px,4vw,56px) 32px;
+  }
+  .foot-grid{
+    display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px;
+  }
+  .foot-grid h4{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    margin-bottom:18px;font-weight:500;
+  }
+  .foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px}
+  .foot-grid a{color:var(--muted);transition:color .3s}
+  .foot-grid a:hover{color:#fff}
+  .foot-brand .logo{margin-bottom:16px}
+  .foot-brand p{color:var(--muted);font-size:14px}
+  .foot-bottom{
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+    padding-top:24px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted);letter-spacing:.06em;
+  }
+  @media(max-width:800px){.foot-grid{grid-template-columns:1fr 1fr}}
+
+  /* reveal helper */
+  .reveal{opacity:0;transform:translateY(36px)}
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
 </head>
 <body>
 
-  <!-- SCROLL PROGRESS -->
-  <div id="scrollProgress"></div>
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pl-logo">Vertex</div>
+  <div class="pl-bar"><i id="plFill"></i></div>
+  <div class="pl-count"><span id="plNum">0</span> %</div>
+</div>
 
-  <!-- CURSOR -->
-  <div class="cursor" id="cur"></div>
-  <div class="cursor-ring" id="curRing"></div>
-
-  <!-- PRELOADER -->
-  <div id="preloader" style="display:none">
-    <div class="pl-lines" id="plLines"></div>
-    <div class="pl-inner">
-      <div class="pl-name">
-        <div class="pl-name-word"><span>Vertex</span></div>
-        &nbsp;
-        <div class="pl-name-word"><span>Group</span></div>
-      </div>
-      <div class="pl-counter" id="plCounter">
-        <p class="pl-load-label">Caricamento</p>
-        <div class="pl-pct-row">
-          <span class="pl-count-num" id="plCountNum">0</span>
-          <span class="pl-count-pct" id="plCountPct">%</span>
-        </div>
-      </div>
-      <div class="pl-bar-wrap">
-        <div class="pl-bar" id="plBar"></div>
-      </div>
-    </div>
-    <div class="pl-panel top" id="plTop"></div>
-    <div class="pl-panel bot" id="plBot"></div>
-  </div>
-
-  <!-- FILMSTRIP -->
-  <div id="filmstrip" style="display:none">
-    <div class="fs-track" id="fsTrack"></div>
-    <div class="fs-skip" id="fsSkip">Skip ↗</div>
-    <div class="fs-dots" id="fsDots"></div>
-  </div>
-
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <a class="nav-logo" href="#">
-      <img src="public/web/images/home/logo.png" alt="Vertex Group" class="nav-logo-img" />
-      <span class="nav-logo-name">VERTEX</span>
-    </a>
-    <div class="nav-center" id="navCenter">
-      <a class="nav-link" href="#work">Lavori</a>
-      <a class="nav-link" href="#services">Servizi</a>
-      <a class="nav-link" href="#about">About</a>
-      <a class="nav-link" href="#faq">FAQ</a>
-    </div>
-    <a class="nav-cta" href="#contact" id="navCta">Parliamo ↗</a>
+<!-- NAV -->
+<header>
+  <a href="#" class="logo">
+    <img src="public/web/images/home/logo.png" alt="Vertex Group" onerror="this.style.display='none'">
+    VERTEX
+  </a>
+  <nav>
+    <a class="nav-link" href="#brand">Le divisioni</a>
+    <a class="nav-link" href="#about">La mentalità</a>
+    <a class="nav-cta" href="#contact">Parliamo ↗</a>
   </nav>
+</header>
 
-  <!-- SITE -->
-  <div id="site">
-
-    <!-- ── HERO ── -->
-    <section class="hero" id="hero">
-      <div class="hero-content">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          Disponibile per nuovi progetti · 2026
-        </div>
-        <div class="hero-title-wrap">
-          <h1 class="hero-title" id="heroTitle" aria-label="Noi siamo social media">
-            <span class="hero-title-line">
-              <span class="hero-title-word hero-title-word--left">dalla</span>
-              <span class="hero-title-word hero-title-word--right">vision</span>
-            </span>
-            <span class="hero-title-line">
-              <span class="hero-title-word hero-title-word--left">alla</span>
-              <span class="hero-title-word hero-title-word--right">realtà</span>
-            </span>
-          </h1>
-          <div class="hero-card-stack" id="heroCardStack" aria-hidden="true">
-            <div class="hero-video-card is-active" style="--r: -6deg; --x: -8px; --y: -4px;">
-              <video muted loop playsinline preload="metadata">
-                <source src="public/web/videos/home/VIDEO%201.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="hero-video-card" style="--r: 7deg; --x: 16px; --y: 8px;">
-              <video muted loop playsinline preload="metadata">
-                <source src="public/web/videos/home/VIDEO%202.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="hero-video-card" style="--r: -10deg; --x: 12px; --y: -12px;">
-              <video muted loop playsinline preload="metadata">
-                <source src="public/web/videos/home/VIDEO%203.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="hero-video-card" style="--r: 4deg; --x: -18px; --y: 10px;">
-              <video muted loop playsinline preload="metadata">
-                <source src="public/web/videos/home/VIDEO%204.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </div>
-        </div>
-        <p class="hero-sub">Siamo un hub creativo e tecnologico che unisce produzione audiovisiva, marketing digitale, design e sviluppo software per aiutare brand, aziende e creator a distinguersi in un mercato sempre più competitivo.</p>
-        <div class="hero-actions">
-          <a href="#work" class="btn btn-primary">Esplora il lavoro</a>
-          <a href="#work" class="btn btn-ghost">
-            <span class="btn-play-icon">
-              <svg viewBox="0 0 12 14" fill="currentColor" width="10"><polygon points="0,0 12,7 0,14"/></svg>
-            </span>
-            Guarda gli Scatti
-          </a>
-        </div>
-      </div>
-      <div class="hero-reel" id="heroReel">
-        <div class="reel-bg" style="background:linear-gradient(160deg,#070b18 0%,#0d1530 50%,#162040 100%);"></div>
-        <div class="reel-grain"></div>
-        <div class="reel-center">
-          <div class="reel-play-btn">
-            <svg viewBox="0 0 14 16" fill="white" width="16"><polygon points="0,0 14,8 0,16"/></svg>
-          </div>
-          <p class="reel-play-label">Showreel 2024</p>
-        </div>
-        <div class="reel-meta">
-          <span class="reel-tag">4K · 03:24</span>
-          <span class="reel-loc">Milano, Italia</span>
-        </div>
-      </div>
-      <div class="hero-statement" id="heroStatement" aria-label="Contenuti che generano valore, strategie che creano crescita, tecnologia che fa la differenza">
-        <p>
-          <span class="statement-word">Contenuti</span>
-          <span class="media-window" data-open="176">
-            <img src="public/web/images/home/IMG_1514.png" alt="Contenuti" loading="lazy" decoding="async" />
-          </span>
-          <span class="statement-word">che</span>
-        </p>
-        <p>
-          <span class="statement-word">generano</span>
-          <span class="statement-word">valore,</span>
-        </p>
-        <p>
-          <span class="statement-word">strategie</span>
-          <span class="media-window" data-open="180">
-            <img src="public/web/images/home/IMG_2753.png" alt="Strategie" loading="lazy" decoding="async" />
-          </span>
-          <span class="statement-word">che</span>
-        </p>
-        <p>
-          <span class="statement-word">creano</span>
-          <span class="statement-word">crescita,</span>
-        </p>
-        <p>
-          <span class="statement-word">tecnologia</span>
-          <span class="media-window" data-open="184">
-            <img src="public/web/images/home/IMG_2038.JPG" alt="Tecnologia" loading="lazy" decoding="async" />
-          </span>
-          <span class="statement-word">che</span>
-        </p>
-        <p>
-          <span class="statement-word">fa</span>
-          <span class="statement-word">la</span>
-          <span class="media-window" data-open="188">
-            <img src="public/web/images/home/IMG_2415.JPG" alt="Differenza" loading="lazy" decoding="async" />
-          </span>
-          <span class="statement-word">differenza.</span>
-        </p>
-      </div>
-      <div class="scroll-cue" id="scrollCue">
-        <span class="scroll-cue-text">Scorri</span>
-        <div class="scroll-cue-line"></div>
-      </div>
-    </section>
-
-    <!-- ── MARQUEE ── -->
-    <div class="marquee-section">
-      <div class="marquee-track">
-        <span class="marquee-item">Brand Film</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Matrimoni</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Ritratto</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Corporate</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Fashion</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Reportage</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Brand Film</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Matrimoni</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Ritratto</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Corporate</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Fashion</span><span class="marquee-sep">✦</span>
-        <span class="marquee-item">Reportage</span><span class="marquee-sep">✦</span>
-      </div>
+<!-- HERO -->
+<section class="hero" style="padding-bottom:0">
+  <div>
+    <div class="hero-badge">Realtà italiana · Est. 2026</div>
+    <h1>
+      <span class="line"><span>Un universo</span></span>
+      <span class="line"><span>in <em>evoluzione</em>.</span></span>
+    </h1>
+    <p class="hero-sub">
+      Vertex nasce nel 2026 con una visione chiara: costruire un ecosistema capace
+      di ridefinire gli standard di qualità, professionalità ed eccellenza nel mondo
+      digitale, creativo e gaming. Tre divisioni, una filosofia: trasformare ogni
+      dettaglio in un'esperienza impeccabile.
+    </p>
+    <div class="hero-actions">
+      <a class="btn solid" href="#brand">Le divisioni</a>
+      <a class="btn ghost" href="#contact">Parliamone ↗</a>
     </div>
+  </div>
 
-    <!-- ── WORK ── -->
-    <section class="work-h-section" id="work">
-      <div class="work-showcase">
-        <div class="work-mark" aria-hidden="true">*</div>
-        <h2 class="work-showcase-title">Creatività, strategia, tecnologia al servizio della crescita.</h2>
-        <div class="work-hover-note" aria-hidden="true">Hover me</div>
-        <div class="work-h-track" id="workHTrack">
-          <article class="wh-card">
-            <img src="public/web/images/home/IMG_1514.png" alt="Ritratto creativo" loading="lazy" decoding="async" />
-          </article>
-          <article class="wh-card">
-            <img src="public/web/images/home/IMG_2753.png" alt="Dettaglio visual per campagna social" loading="lazy" decoding="async" />
-          </article>
-          <article class="wh-card">
-            <img src="public/web/images/home/IMG_2038.JPG" alt="Paesaggio editoriale" loading="lazy" decoding="async" />
-          </article>
-          <article class="wh-card">
-            <img src="public/web/images/home/IMG_2415.JPG" alt="Setup di lavoro per brand" loading="lazy" decoding="async" />
-          </article>
-          <article class="wh-card">
-            <img src="public/web/images/home/IMG_2654.JPG" alt="Visual monocromatico editoriale" loading="lazy" decoding="async" />
-          </article>
-        </div>
-        <a class="work-showcase-cta" href="#contact">Parliamone</a>
-      </div>
-    </section>
+  <!-- tre vertici, tre brand -->
+  <div class="hero-tri" aria-hidden="true">
+    <svg viewBox="0 0 400 400">
+      <defs>
+        <linearGradient id="triGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#DDE3EA" stop-opacity=".5"/>
+          <stop offset="50%" stop-color="#7C5CFF" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#E4A14B" stop-opacity=".5"/>
+        </linearGradient>
+      </defs>
+      <g class="tri-shape">
+        <polygon points="200,40 360,320 40,320" fill="none" stroke="url(#triGrad)" stroke-width="1.2"/>
+        <polygon points="200,110 310,295 90,295" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <circle class="tri-vertex v1" cx="200" cy="40" r="5" fill="#DDE3EA"/>
+        <circle class="tri-vertex v2" cx="360" cy="320" r="5" fill="#7C5CFF"/>
+        <circle class="tri-vertex v3" cx="40" cy="320" r="5" fill="#E4A14B"/>
+      </g>
+    </svg>
+  </div>
 
-    <!-- ── SERVICES ── -->
-    <section class="services-section" id="services">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Chi siamo</span>
-            <h2 class="section-title">I nostri brand</h2>
-          </div>
-        </div>
-        <div class="brands-grid">
-          <div class="brand-card">
-            <div class="brand-card-img-wrap">
-              <img src="public/web/images/home/vertex_group.png" alt="Vertex Group" loading="lazy" decoding="async" />
-            </div>
-            <div class="brand-card-body">
-              <h3 class="brand-card-title">Vertex Group</h3>
-              <p class="brand-card-desc">Il cuore del gruppo: creatività, strategia e tecnologia al servizio della crescita.</p>
-            </div>
-          </div>
-          <div class="brand-card">
-            <div class="brand-card-img-wrap">
-              <img src="public/web/images/home/vertex_Gaming.png" alt="Vertex Gaming" loading="lazy" decoding="async" />
-            </div>
-            <div class="brand-card-body">
-              <h3 class="brand-card-title">Vertex Gaming</h3>
-              <p class="brand-card-desc">Contenuti, community e strategie dedicate al mondo gaming e agli esports.</p>
-            </div>
-          </div>
-          <div class="brand-card">
-            <div class="brand-card-img-wrap">
-              <img src="public/web/images/home/vertex_studios.png" alt="Vertex Studios" loading="lazy" decoding="async" />
-            </div>
-            <div class="brand-card-body">
-              <h3 class="brand-card-title">Vertex Studios</h3>
-              <p class="brand-card-desc">Produzione audiovisiva professionale: video, fotografia e post-produzione.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── STATS ── -->
-    <div class="stats-section">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-num" data-target="200" data-suffix="+">0</div>
-            <p class="stat-label">Progetti completati</p>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-num" data-target="8" data-suffix="">0</div>
-            <p class="stat-label">Anni di esperienza</p>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-num" data-target="40" data-suffix="+">0</div>
-            <p class="stat-label">Clienti soddisfatti</p>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-num" data-target="12" data-suffix="">0</div>
-            <p class="stat-label">Premi vinti</p>
-          </div>
-        </div>
-      </div>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>Vertex Group <i>✦</i></span>
+      <span>Vertex Studios <i>✦</i></span>
+      <span>Vertex Gaming <i>✦</i></span>
+      <span>Est. 2026 <i>✦</i></span>
+      <span>Made in Italy <i>✦</i></span>
+      <span>Un universo in evoluzione <i>✦</i></span>
     </div>
+  </div>
+</section>
 
-    <!-- ── ABOUT ── -->
-    <section class="about-section lens-section" id="about">
-      <div class="lens-stage">
-        <div class="lens-noise" aria-hidden="true"></div>
-        <div class="lens-white-wipe" aria-hidden="true"></div>
-        <div class="lens-corner">Chi siamo</div>
-        <div class="lens-copy">
-          <h2 class="lens-title" aria-label="Chi siamo">
-            <span>C<span class="lens-entry-letter">H</span>I</span>
-            <span>SIAMO</span>
-          </h2>
-        </div>
-        <div class="lens-about-card" aria-label="Presentazione personale">
-          <div class="lens-about-inner">
-            <span class="lens-about-kicker">VERTEX GROUP</span>
-            <p class="lens-about-lead">
-              Trasformiamo visioni ambiziose in contenuti, prodotti e soluzioni digitali ad alto impatto.
-            </p>
-            <p class="lens-about-text">
-              Vertex Group è il punto d'incontro tra creatività, innovazione e strategia. Progettiamo contenuti che coinvolgono, identità che si distinguono e tecnologie che accelerano la crescita. Ogni soluzione viene sviluppata con un approccio orientato ai risultati, combinando design, marketing e sviluppo digitale in un unico ecosistema.
-            </p>
-            <div class="lens-about-meta" aria-label="Ambiti di lavoro">
-              <span>Creatività</span>
-              <span>Innovazione</span>
-              <span>Strategia</span>
-              <span>Crescita</span>
-            </div>
-          </div>
-        </div>
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="eyebrow">Cos'è Vertex</div>
+  <p id="manifestoText">
+    Non un semplice gruppo di progetti. Un <strong class="g1">universo</strong>
+    in continua evoluzione, dove ogni <strong class="g2">dettaglio</strong>
+    diventa un'esperienza <strong class="g3">impeccabile</strong>.
+  </p>
+</section>
+
+<!-- I NOSTRI BRAND -->
+<section class="brands" id="brand">
+  <div class="brands-head">
+    <div>
+      <div class="eyebrow">Le divisioni</div>
+      <h2 class="section-title reveal">Tre vertici. Una visione.</h2>
+    </div>
+    <p class="reveal">
+      Tre realtà differenti, unite dalla stessa filosofia:
+      puntare all'eccellenza sotto ogni punto di vista.
+    </p>
+  </div>
+
+  <div class="brand-panels">
+    <a class="panel reveal" href="group.html">
+      <span class="panel-index">Creator &amp; Digital Talent</span>
+      <img class="panel-logo" src="public/web/images/home/vertex_group.png" alt="Vertex Group" onerror="this.style.display='none'">
+      <h3>Vertex Group</h3>
+      <p>L'ecosistema dedicato ai creator e ai talenti digitali: supporto professionale, strategie di crescita e servizi esclusivi per il mondo delle piattaforme live e dei social.</p>
+      <div class="panel-tags">
+        <span>Creator</span><span>Live</span><span>Social</span>
       </div>
-    </section>
+      <span class="panel-cta">Entra <span class="arrow">↗</span></span>
+    </a>
 
-    <!-- ── TESTIMONIALS ── -->
-    <section class="testimonials-section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Testimonianze</span>
-            <h2 class="section-title">Cosa dicono<br>i clienti.</h2>
-          </div>
-        </div>
-        <div class="testimonials-grid">
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p class="quote">"Marco ha trasformato il nostro matrimonio in un racconto visivo straordinario. Ogni foto è un'emozione cristallizzata nel tempo."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar" style="background:linear-gradient(135deg,#1a1a3e,#2a2a6e);"></div>
-              <div>
-                <p class="author-name">Sofia Martini</p>
-                <p class="author-role">Sposa · Venezia 2024</p>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p class="quote">"Il brand film realizzato per noi ha superato ogni aspettativa. Professionale, creativo e puntuale in ogni fase del progetto."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar" style="background:linear-gradient(135deg,#1a0800,#4d1800);"></div>
-              <div>
-                <p class="author-name">Luca Ferretti</p>
-                <p class="author-role">CEO · Studio Ferretti</p>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p class="quote">"Collaborare con Marco è stata un'esperienza rara. Cattura l'essenza del momento con un occhio davvero fuori dal comune."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar" style="background:linear-gradient(135deg,#001a0a,#004d22);"></div>
-              <div>
-                <p class="author-name">Anna Bianchi</p>
-                <p class="author-role">Art Director · Milano</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <a class="panel studios reveal" href="#">
+      <span class="panel-index">Il cuore creativo</span>
+      <img class="panel-logo" src="public/web/images/home/vertex_studios.png" alt="Vertex Studios" onerror="this.style.display='none'">
+      <h3>Vertex Studios</h3>
+      <p>Lo spazio dove idee, produzione, design e comunicazione prendono forma attraverso standard elevati, cura estetica e attenzione assoluta alla qualità.</p>
+      <div class="panel-tags">
+        <span>Produzione</span><span>Design</span><span>Comunicazione</span>
       </div>
-    </section>
+      <span class="panel-cta">Entra <span class="arrow">↗</span></span>
+    </a>
 
-    <!-- ── FAQ ── -->
-    <section class="faq-section" id="faq">
-      <div class="container">
-        <div class="faq-grid">
-          <div class="faq-left">
-            <span class="eyebrow">FAQ</span>
-            <h2 class="section-title">Domande<br>frequenti.</h2>
-          </div>
-          <div class="faq-list" id="faqList">
-            <div class="faq-item">
-              <button class="faq-q"><span>Quali sono i tempi di consegna?</span><span class="faq-icon">+</span></button>
-              <div class="faq-a"><p>Per la fotografia, la consegna avviene entro 2–3 settimane dalla sessione. Per i video, il montaggio finale è pronto entro 4–6 settimane dalla ripresa.</p></div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-q"><span>Lavori anche fuori Milano?</span><span class="faq-icon">+</span></button>
-              <div class="faq-a"><p>Assolutamente sì. Sono basato tra Milano e Roma e disponibile a viaggiare in tutta Italia e all'estero per i progetti giusti.</p></div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-q"><span>Come funziona il processo di prenotazione?</span><span class="faq-icon">+</span></button>
-              <div class="faq-a"><p>Iniziamo con una call conoscitiva gratuita. Poi preparo un preventivo su misura. Un acconto del 30% conferma la data nel calendario.</p></div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-q"><span>Fornisci i file RAW delle fotografie?</span><span class="faq-icon">+</span></button>
-              <div class="faq-a"><p>I file RAW non sono inclusi nei pacchetti standard. Consegno immagini selezionate e ritoccate in alta risoluzione. I RAW possono essere acquistati separatamente.</p></div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-q"><span>Posso usare le foto per uso commerciale?</span><span class="faq-icon">+</span></button>
-              <div class="faq-a"><p>Dipende dal contratto. I pacchetti standard includono l'uso personale e editoriale. Per campagne commerciali o pubblicitarie esistono licenze dedicate.</p></div>
-            </div>
-          </div>
-        </div>
+    <a class="panel gaming reveal" href="#">
+      <span class="panel-index">Gaming &amp; Entertainment</span>
+      <img class="panel-logo" src="public/web/images/home/vertex_Gaming.png" alt="Vertex Gaming" onerror="this.style.display='none'">
+      <h3>Vertex Gaming</h3>
+      <p>La nostra visione nel gaming e nell'entertainment competitivo: una community moderna e ambiziosa, orientata alle nuove generazioni del digitale italiano.</p>
+      <div class="panel-tags">
+        <span>Community</span><span>Competitive</span><span>Entertainment</span>
       </div>
-    </section>
+      <span class="panel-cta">Entra <span class="arrow">↗</span></span>
+    </a>
+  </div>
+</section>
 
-    <!-- ── CTA ── -->
-    <section class="cta-section" id="contact">
-      <div class="container">
-        <div class="cta-inner">
-          <span class="eyebrow">Iniziamo</span>
-          <h2 class="cta-title">Hai un progetto<br>in mente?</h2>
-          <p class="cta-sub">Raccontami la tua idea. Rispondo entro 24 ore.</p>
-          <a class="btn btn-primary btn-large cta-btn-main" href="mailto:info@vertexgroup.it">Scrivimi ↗</a>
-          <p class="cta-email-raw">info@vertexgroup.it</p>
-        </div>
+<!-- CHI SIAMO -->
+<section id="about">
+  <div class="eyebrow">La mentalità</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="section-title reveal" style="margin-bottom:32px">L'eccellenza è il punto di partenza</h2>
+      <p class="lead reveal">Crediamo che l'eccellenza non sia un dettaglio finale, ma il punto da cui tutto comincia.</p>
+      <p class="body-copy reveal">
+        Vertex è una realtà giovane, ma nasce con grandi prospettive, ambizioni
+        concrete e una visione internazionale orientata al futuro. La nostra missione
+        è creare un ambiente innovativo, dinamico e senza limiti, dove creator,
+        artisti, gamer e professionisti possano crescere, esprimersi e raggiungere
+        nuovi livelli attraverso strumenti, supporto e opportunità reali.
+        Vertex non rappresenta solo un brand: rappresenta una nuova generazione di
+        realtà italiane che vogliono alzare il livello e costruire qualcosa
+        destinato a durare nel tempo.
+      </p>
+      <ul class="model reveal">
+        <li><b>Ogni dettaglio conta</b><span>Precisione e cura in ogni servizio, collaborazione ed esperienza.</span></li>
+        <li><b>Ogni scelta ha un obiettivo</b><span>Niente è casuale: ogni decisione è parte di una strategia.</span></li>
+        <li><b>Ogni progetto lascia il segno</b><span>Costruiamo esperienze destinate a durare nel tempo.</span></li>
+      </ul>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b><span data-count="2026">0</span></b><small>Anno di fondazione</small></div>
+      <div class="stat"><b><span data-count="3">0</span></b><small>Divisioni strategiche</small></div>
+      <div class="stat"><b><span data-count="1">0</span></b><small>Filosofia condivisa</small></div>
+      <div class="stat"><b><span data-count="100">0</span><i>%</i></b><small>Made in Italy</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATTI -->
+<section class="contact" id="contact">
+  <div class="eyebrow">Il futuro</div>
+  <h2 class="reveal"><a href="mailto:info@vertexgroup.it">Parliamone ↗</a></h2>
+  <p class="reveal">Creator, artista, gamer o professionista: raccontaci chi sei e dove vuoi arrivare.</p>
+  <a class="mail reveal" href="mailto:info@vertexgroup.it">info@vertexgroup.it</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="logo">
+        <img src="public/web/images/home/logo.png" alt="Vertex Group" onerror="this.style.display='none'">
+        VERTEX
       </div>
-    </section>
+      <p>Un universo in evoluzione<br>Made in Italy · Est. 2026</p>
+    </div>
+    <div>
+      <h4>Le divisioni</h4>
+      <ul>
+        <li><a href="group.html">Vertex Group</a></li>
+        <li><a href="#">Vertex Studios</a></li>
+        <li><a href="#">Vertex Gaming</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contatti</h4>
+      <ul>
+        <li><a href="mailto:info@vertexgroup.it">info@vertexgroup.it</a></li>
+        <li><a href="tel:+393331234567">+39 333 123 4567</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Social</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Behance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Vertex. Tutti i diritti riservati.</span>
+    <span>P.IVA 12345678901</span>
+  </div>
+</footer>
 
-    <!-- ── FOOTER ── -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-top">
-          <div class="footer-brand">
-            <img src="public/web/images/home/logo.png" alt="Vertex Group" class="footer-logo-img" />
-            <p class="footer-tagline">Studio Creativo Digitale<br>Milano · Roma</p>
-          </div>
-          <div class="footer-links">
-            <div class="footer-col">
-              <p class="footer-col-label">Navigazione</p>
-              <a href="#work">Lavori</a>
-              <a href="#services">Servizi</a>
-              <a href="#about">About</a>
-              <a href="#contact">Contatti</a>
-            </div>
-            <div class="footer-col">
-              <p class="footer-col-label">Contatti</p>
-              <a href="mailto:info@vertexgroup.it">info@vertexgroup.it</a>
-              <a href="tel:+393331234567">+39 333 123 4567</a>
-            </div>
-            <div class="footer-col">
-              <p class="footer-col-label">Social</p>
-              <a href="#">Instagram</a>
-              <a href="#">LinkedIn</a>
-              <a href="#">Behance</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <span>© 2026 Vertex Group. Tutti i diritti riservati.</span>
-          <span>P.IVA 12345678901</span>
-        </div>
-      </div>
-    </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pre = document.getElementById('preloader');
+  const num = document.getElementById('plNum');
+  const fill = document.getElementById('plFill');
 
-  </div><!-- /#site -->
+  // duplica il marquee per il loop infinito
+  const track = document.getElementById('marqueeTrack');
+  track.innerHTML += track.innerHTML;
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=20260507-spread-magnet-cards"></script>
+  function startPage(){
+    pre.classList.add('done');
+    setTimeout(()=>pre.remove(),1000);
+    if(reduced || !window.gsap) { document.querySelectorAll('.reveal').forEach(el=>{el.style.opacity=1;el.style.transform='none';}); initCounters(true); return; }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // hero
+    gsap.from('.hero h1 .line > span',{yPercent:110,duration:1.1,stagger:.12,ease:'power4.out',delay:.15});
+    gsap.from('.hero-badge, .hero-sub, .hero-actions',{opacity:0,y:24,duration:.9,stagger:.1,ease:'power3.out',delay:.5});
+    gsap.from('.hero-tri',{opacity:0,scale:.9,duration:1.4,ease:'power3.out',delay:.4});
+
+    // reveal generico
+    document.querySelectorAll('.reveal').forEach(el=>{
+      gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',
+        scrollTrigger:{trigger:el,start:'top 85%'}});
+    });
+
+    // manifesto: parole che si accendono allo scroll
+    const p = document.getElementById('manifestoText');
+    p.innerHTML = p.innerHTML.replace(/(<strong[^>]*>.*?<\/strong>|[^\s<]+)/g,
+      m => m.startsWith('<strong') ? `<span class="word">${m}</span>` : `<span class="word">${m}</span>`);
+    const words = p.querySelectorAll('.word');
+    ScrollTrigger.create({
+      trigger:p,start:'top 80%',end:'bottom 45%',scrub:true,
+      onUpdate(self){
+        const n = Math.floor(self.progress*words.length);
+        words.forEach((w,i)=>w.classList.toggle('on', i<=n));
+      }
+    });
+
+    initCounters(false);
+  }
+
+  function initCounters(instant){
+    document.querySelectorAll('[data-count]').forEach(el=>{
+      const target = +el.dataset.count;
+      if(instant || !window.gsap){ el.textContent = target; return; }
+      const obj = {v:0};
+      gsap.to(obj,{v:target,duration:1.6,ease:'power2.out',
+        scrollTrigger:{trigger:el,start:'top 88%'},
+        onUpdate:()=>el.textContent=Math.round(obj.v)});
+    });
+  }
+
+  // preloader
+  if(reduced){ num.textContent='100'; fill.style.transform='scaleX(1)'; setTimeout(startPage,150); }
+  else{
+    let v=0;
+    const iv=setInterval(()=>{
+      v = Math.min(100, v + Math.random()*16);
+      num.textContent = Math.floor(v);
+      fill.style.transform = `scaleX(${v/100})`;
+      if(v>=100){ clearInterval(iv); setTimeout(startPage,350); }
+    },90);
+  }
+})();
+</script>
 </body>
 </html>

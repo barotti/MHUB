@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vertex Group - Studio Creativo Digitale</title>
+  <meta name="description" content="Vertex Group: video editing, short form content, social media management, graphic design, 3D, strategia, web e brand identity." />
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260619-about-center" />
+</head>
+<body>
+
+  <!-- SCROLL PROGRESS -->
+  <div id="scrollProgress"></div>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cur"></div>
+  <div class="cursor-ring" id="curRing"></div>
+
+  <!-- PRELOADER -->
+  <div id="preloader" style="display:none">
+    <div class="pl-lines" id="plLines"></div>
+    <div class="pl-inner">
+      <div class="pl-name">
+        <div class="pl-name-word"><span>Vertex</span></div>
+        &nbsp;
+        <div class="pl-name-word"><span>Group</span></div>
+      </div>
+      <div class="pl-counter" id="plCounter">
+        <p class="pl-load-label">Caricamento</p>
+        <div class="pl-pct-row">
+          <span class="pl-count-num" id="plCountNum">0</span>
+          <span class="pl-count-pct" id="plCountPct">%</span>
+        </div>
+      </div>
+      <div class="pl-bar-wrap">
+        <div class="pl-bar" id="plBar"></div>
+      </div>
+    </div>
+    <div class="pl-panel top" id="plTop"></div>
+    <div class="pl-panel bot" id="plBot"></div>
+  </div>
+
+  <!-- FILMSTRIP -->
+  <div id="filmstrip" style="display:none">
+    <div class="fs-track" id="fsTrack"></div>
+    <div class="fs-skip" id="fsSkip">Skip ↗</div>
+    <div class="fs-dots" id="fsDots"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a class="nav-logo" href="index.html">
+      <img src="public/web/images/home/logo.png" alt="Vertex Group" class="nav-logo-img" />
+      <span class="nav-logo-name">VERTEX</span>
+    </a>
+    <div class="nav-center" id="navCenter">
+      <a class="nav-link" href="#work">Lavori</a>
+      <a class="nav-link" href="#services">Servizi</a>
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#faq">FAQ</a>
+    </div>
+    <a class="nav-cta" href="#contact" id="navCta">Parliamo ↗</a>
+  </nav>
+
+  <!-- SITE -->
+  <div id="site">
+
+    <!-- ── HERO ── -->
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Disponibile per nuovi progetti · 2026
+        </div>
+        <div class="hero-title-wrap">
+          <h1 class="hero-title" id="heroTitle" aria-label="Noi siamo social media">
+            <span class="hero-title-line">
+              <span class="hero-title-word hero-title-word--left">dalla</span>
+              <span class="hero-title-word hero-title-word--right">vision</span>
+            </span>
+            <span class="hero-title-line">
+              <span class="hero-title-word hero-title-word--left">alla</span>
+              <span class="hero-title-word hero-title-word--right">realtà</span>
+            </span>
+          </h1>
+          <div class="hero-card-stack" id="heroCardStack" aria-hidden="true">
+            <div class="hero-video-card is-active" style="--r: -6deg; --x: -8px; --y: -4px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/VIDEO%201.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="hero-video-card" style="--r: 7deg; --x: 16px; --y: 8px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/VIDEO%202.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="hero-video-card" style="--r: -10deg; --x: 12px; --y: -12px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/VIDEO%203.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="hero-video-card" style="--r: 4deg; --x: -18px; --y: 10px;">
+              <video muted loop playsinline preload="metadata">
+                <source src="public/web/videos/home/VIDEO%204.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </div>
+        <p class="hero-sub">Siamo un hub creativo e tecnologico che unisce produzione audiovisiva, marketing digitale, design e sviluppo software per aiutare brand, aziende e creator a distinguersi in un mercato sempre più competitivo.</p>
+        <div class="hero-actions">
+          <a href="#work" class="btn btn-primary">Esplora il lavoro</a>
+          <a href="#work" class="btn btn-ghost">
+            <span class="btn-play-icon">
+              <svg viewBox="0 0 12 14" fill="currentColor" width="10"><polygon points="0,0 12,7 0,14"/></svg>
+            </span>
+            Guarda gli Scatti
+          </a>
+        </div>
+      </div>
+      <div class="hero-reel" id="heroReel">
+        <div class="reel-bg" style="background:linear-gradient(160deg,#070b18 0%,#0d1530 50%,#162040 100%);"></div>
+        <div class="reel-grain"></div>
+        <div class="reel-center">
+          <div class="reel-play-btn">
+            <svg viewBox="0 0 14 16" fill="white" width="16"><polygon points="0,0 14,8 0,16"/></svg>
+          </div>
+          <p class="reel-play-label">Showreel 2024</p>
+        </div>
+        <div class="reel-meta">
+          <span class="reel-tag">4K · 03:24</span>
+          <span class="reel-loc">Milano, Italia</span>
+        </div>
+      </div>
+      <div class="hero-statement" id="heroStatement" aria-label="Contenuti che generano valore, strategie che creano crescita, tecnologia che fa la differenza">
+        <p>
+          <span class="statement-word">Contenuti</span>
+          <span class="media-window" data-open="176">
+            <img src="public/web/images/home/IMG_1514.png" alt="Contenuti" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">che</span>
+        </p>
+        <p>
+          <span class="statement-word">generano</span>
+          <span class="statement-word">valore,</span>
+        </p>
+        <p>
+          <span class="statement-word">strategie</span>
+          <span class="media-window" data-open="180">
+            <img src="public/web/images/home/IMG_2753.png" alt="Strategie" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">che</span>
+        </p>
+        <p>
+          <span class="statement-word">creano</span>
+          <span class="statement-word">crescita,</span>
+        </p>
+        <p>
+          <span class="statement-word">tecnologia</span>
+          <span class="media-window" data-open="184">
+            <img src="public/web/images/home/IMG_2038.JPG" alt="Tecnologia" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">che</span>
+        </p>
+        <p>
+          <span class="statement-word">fa</span>
+          <span class="statement-word">la</span>
+          <span class="media-window" data-open="188">
+            <img src="public/web/images/home/IMG_2415.JPG" alt="Differenza" loading="lazy" decoding="async" />
+          </span>
+          <span class="statement-word">differenza.</span>
+        </p>
+      </div>
+      <div class="scroll-cue" id="scrollCue">
+        <span class="scroll-cue-text">Scorri</span>
+        <div class="scroll-cue-line"></div>
+      </div>
+    </section>
+
+    <!-- ── MARQUEE ── -->
+    <div class="marquee-section">
+      <div class="marquee-track">
+        <span class="marquee-item">Brand Film</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Matrimoni</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Ritratto</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Corporate</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Fashion</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Reportage</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Brand Film</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Matrimoni</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Ritratto</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Corporate</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Fashion</span><span class="marquee-sep">✦</span>
+        <span class="marquee-item">Reportage</span><span class="marquee-sep">✦</span>
+      </div>
+    </div>
+
+    <!-- ── WORK ── -->
+    <section class="work-h-section" id="work">
+      <div class="work-showcase">
+        <div class="work-mark" aria-hidden="true">*</div>
+        <h2 class="work-showcase-title">Creatività, strategia, tecnologia al servizio della crescita.</h2>
+        <div class="work-hover-note" aria-hidden="true">Hover me</div>
+        <div class="work-h-track" id="workHTrack">
+          <article class="wh-card">
+            <img src="public/web/images/home/IMG_1514.png" alt="Ritratto creativo" loading="lazy" decoding="async" />
+          </article>
+          <article class="wh-card">
+            <img src="public/web/images/home/IMG_2753.png" alt="Dettaglio visual per campagna social" loading="lazy" decoding="async" />
+          </article>
+          <article class="wh-card">
+            <img src="public/web/images/home/IMG_2038.JPG" alt="Paesaggio editoriale" loading="lazy" decoding="async" />
+          </article>
+          <article class="wh-card">
+            <img src="public/web/images/home/IMG_2415.JPG" alt="Setup di lavoro per brand" loading="lazy" decoding="async" />
+          </article>
+          <article class="wh-card">
+            <img src="public/web/images/home/IMG_2654.JPG" alt="Visual monocromatico editoriale" loading="lazy" decoding="async" />
+          </article>
+        </div>
+        <a class="work-showcase-cta" href="#contact">Parliamone</a>
+      </div>
+    </section>
+
+    <!-- ── SERVICES ── -->
+    <section class="services-section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Chi siamo</span>
+            <h2 class="section-title">I nostri brand</h2>
+          </div>
+        </div>
+        <div class="brands-grid">
+          <div class="brand-card">
+            <div class="brand-card-img-wrap">
+              <img src="public/web/images/home/vertex_group.png" alt="Vertex Group" loading="lazy" decoding="async" />
+            </div>
+            <div class="brand-card-body">
+              <h3 class="brand-card-title">Vertex Group</h3>
+              <p class="brand-card-desc">Il cuore del gruppo: creatività, strategia e tecnologia al servizio della crescita.</p>
+            </div>
+          </div>
+          <div class="brand-card">
+            <div class="brand-card-img-wrap">
+              <img src="public/web/images/home/vertex_Gaming.png" alt="Vertex Gaming" loading="lazy" decoding="async" />
+            </div>
+            <div class="brand-card-body">
+              <h3 class="brand-card-title">Vertex Gaming</h3>
+              <p class="brand-card-desc">Contenuti, community e strategie dedicate al mondo gaming e agli esports.</p>
+            </div>
+          </div>
+          <div class="brand-card">
+            <div class="brand-card-img-wrap">
+              <img src="public/web/images/home/vertex_studios.png" alt="Vertex Studios" loading="lazy" decoding="async" />
+            </div>
+            <div class="brand-card-body">
+              <h3 class="brand-card-title">Vertex Studios</h3>
+              <p class="brand-card-desc">Produzione audiovisiva professionale: video, fotografia e post-produzione.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ── -->
+    <div class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-num" data-target="200" data-suffix="+">0</div>
+            <p class="stat-label">Progetti completati</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="8" data-suffix="">0</div>
+            <p class="stat-label">Anni di esperienza</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="40" data-suffix="+">0</div>
+            <p class="stat-label">Clienti soddisfatti</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="12" data-suffix="">0</div>
+            <p class="stat-label">Premi vinti</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <section class="about-section lens-section" id="about">
+      <div class="lens-stage">
+        <div class="lens-noise" aria-hidden="true"></div>
+        <div class="lens-white-wipe" aria-hidden="true"></div>
+        <div class="lens-corner">Chi siamo</div>
+        <div class="lens-copy">
+          <h2 class="lens-title" aria-label="Chi siamo">
+            <span>C<span class="lens-entry-letter">H</span>I</span>
+            <span>SIAMO</span>
+          </h2>
+        </div>
+        <div class="lens-about-card" aria-label="Presentazione personale">
+          <div class="lens-about-inner">
+            <span class="lens-about-kicker">VERTEX GROUP</span>
+            <p class="lens-about-lead">
+              Trasformiamo visioni ambiziose in contenuti, prodotti e soluzioni digitali ad alto impatto.
+            </p>
+            <p class="lens-about-text">
+              Vertex Group è il punto d'incontro tra creatività, innovazione e strategia. Progettiamo contenuti che coinvolgono, identità che si distinguono e tecnologie che accelerano la crescita. Ogni soluzione viene sviluppata con un approccio orientato ai risultati, combinando design, marketing e sviluppo digitale in un unico ecosistema.
+            </p>
+            <div class="lens-about-meta" aria-label="Ambiti di lavoro">
+              <span>Creatività</span>
+              <span>Innovazione</span>
+              <span>Strategia</span>
+              <span>Crescita</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ── -->
+    <section class="testimonials-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Testimonianze</span>
+            <h2 class="section-title">Cosa dicono<br>i clienti.</h2>
+          </div>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"Marco ha trasformato il nostro matrimonio in un racconto visivo straordinario. Ogni foto è un'emozione cristallizzata nel tempo."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#1a1a3e,#2a2a6e);"></div>
+              <div>
+                <p class="author-name">Sofia Martini</p>
+                <p class="author-role">Sposa · Venezia 2024</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"Il brand film realizzato per noi ha superato ogni aspettativa. Professionale, creativo e puntuale in ogni fase del progetto."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#1a0800,#4d1800);"></div>
+              <div>
+                <p class="author-name">Luca Ferretti</p>
+                <p class="author-role">CEO · Studio Ferretti</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="quote">"Collaborare con Marco è stata un'esperienza rara. Cattura l'essenza del momento con un occhio davvero fuori dal comune."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#001a0a,#004d22);"></div>
+              <div>
+                <p class="author-name">Anna Bianchi</p>
+                <p class="author-role">Art Director · Milano</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section class="faq-section" id="faq">
+      <div class="container">
+        <div class="faq-grid">
+          <div class="faq-left">
+            <span class="eyebrow">FAQ</span>
+            <h2 class="section-title">Domande<br>frequenti.</h2>
+          </div>
+          <div class="faq-list" id="faqList">
+            <div class="faq-item">
+              <button class="faq-q"><span>Quali sono i tempi di consegna?</span><span class="faq-icon">+</span></button>
+              <div class="faq-a"><p>Per la fotografia, la consegna avviene entro 2–3 settimane dalla sessione. Per i video, il montaggio finale è pronto entro 4–6 settimane dalla ripresa.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q"><span>Lavori anche fuori Milano?</span><span class="faq-icon">+</span></button>
+              <div class="faq-a"><p>Assolutamente sì. Sono basato tra Milano e Roma e disponibile a viaggiare in tutta Italia e all'estero per i progetti giusti.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q"><span>Come funziona il processo di prenotazione?</span><span class="faq-icon">+</span></button>
+              <div class="faq-a"><p>Iniziamo con una call conoscitiva gratuita. Poi preparo un preventivo su misura. Un acconto del 30% conferma la data nel calendario.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q"><span>Fornisci i file RAW delle fotografie?</span><span class="faq-icon">+</span></button>
+              <div class="faq-a"><p>I file RAW non sono inclusi nei pacchetti standard. Consegno immagini selezionate e ritoccate in alta risoluzione. I RAW possono essere acquistati separatamente.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q"><span>Posso usare le foto per uso commerciale?</span><span class="faq-icon">+</span></button>
+              <div class="faq-a"><p>Dipende dal contratto. I pacchetti standard includono l'uso personale e editoriale. Per campagne commerciali o pubblicitarie esistono licenze dedicate.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section" id="contact">
+      <div class="container">
+        <div class="cta-inner">
+          <span class="eyebrow">Iniziamo</span>
+          <h2 class="cta-title">Hai un progetto<br>in mente?</h2>
+          <p class="cta-sub">Raccontami la tua idea. Rispondo entro 24 ore.</p>
+          <a class="btn btn-primary btn-large cta-btn-main" href="mailto:info@vertexgroup.it">Scrivimi ↗</a>
+          <p class="cta-email-raw">info@vertexgroup.it</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <img src="public/web/images/home/logo.png" alt="Vertex Group" class="footer-logo-img" />
+            <p class="footer-tagline">Studio Creativo Digitale<br>Milano · Roma</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-col">
+              <p class="footer-col-label">Navigazione</p>
+              <a href="#work">Lavori</a>
+              <a href="#services">Servizi</a>
+              <a href="#about">About</a>
+              <a href="#contact">Contatti</a>
+            </div>
+            <div class="footer-col">
+              <p class="footer-col-label">Contatti</p>
+              <a href="mailto:info@vertexgroup.it">info@vertexgroup.it</a>
+              <a href="tel:+393331234567">+39 333 123 4567</a>
+            </div>
+            <div class="footer-col">
+              <p class="footer-col-label">Social</p>
+              <a href="#">Instagram</a>
+              <a href="#">LinkedIn</a>
+              <a href="#">Behance</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 Vertex Group. Tutti i diritti riservati.</span>
+          <span>P.IVA 12345678901</span>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /#site -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+  <script src="js/main.js?v=20260507-spread-magnet-cards"></script>
+</body>
+</html>
