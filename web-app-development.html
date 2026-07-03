@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERTEX STUDIOS — Web / App Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;1,800;1,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#050608;
+  --surface:#0b0e14;
+  --surface-2:#0f131c;
+  --line:rgba(255,255,255,.08);
+  --txt:#f2f5fa;
+  --muted:#8a93a6;
+  --blue:#1f6bff;
+  --cyan:#00e5ff;
+  --amber:#ffb020;
+  --magenta:#ff2e63;
+  --green:#12d98e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'Space Grotesk',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+@media (hover:none){body{cursor:auto}}
+::selection{background:var(--blue);color:#fff}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:var(--cyan)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(0,229,255,.5);transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hovering{width:64px;height:64px;border-color:var(--blue);background:rgba(31,107,255,.08)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- PROGRESS ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:999;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--blue),var(--cyan),var(--magenta))}
+
+/* ---------- CANVAS ---------- */
+#net{position:fixed;inset:0;z-index:0;opacity:.55}
+
+/* ---------- LAYOUT ---------- */
+main{position:relative;z-index:1}
+section{padding:110px 6vw;position:relative;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:14px;margin-bottom:28px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--blue)}
+h1,h2{
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:.95;
+}
+h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
+.lead{color:var(--muted);max-width:640px;font-size:17px;line-height:1.7}
+
+/* glitch title */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{
+  content:attr(data-txt);position:absolute;inset:0;overflow:hidden;
+  clip-path:inset(0 0 0 0);opacity:0;
+}
+.glitch::before{color:var(--cyan);z-index:-1}
+.glitch::after{color:var(--magenta);z-index:-2}
+.glitch.on::before{animation:g1 .6s steps(2) both}
+.glitch.on::after{animation:g2 .6s steps(2) both}
+@keyframes g1{0%{opacity:.9;transform:translate(-6px,2px);clip-path:inset(10% 0 55% 0)}40%{clip-path:inset(60% 0 5% 0)}100%{opacity:0;transform:none}}
+@keyframes g2{0%{opacity:.9;transform:translate(6px,-2px);clip-path:inset(50% 0 20% 0)}40%{clip-path:inset(5% 0 70% 0)}100%{opacity:0;transform:none}}
+
+/* chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.chip{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;
+  border:1px solid var(--line);padding:7px 14px;color:var(--muted);
+  transition:.3s;background:rgba(255,255,255,.02)
+}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.25)}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(52px,10.5vw,150px)}
+.hero .accent{color:var(--blue);
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{color:var(--muted);font-size:clamp(15px,1.6vw,19px);margin-top:26px;max-width:560px;line-height:1.7}
+.hero-stats{display:flex;gap:0;margin-top:64px;border:1px solid var(--line);width:fit-content;flex-wrap:wrap;backdrop-filter:blur(6px);background:rgba(11,14,20,.5)}
+.hstat{padding:22px 34px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat b{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;color:var(--txt);display:block}
+.hstat b .u{font-size:14px;color:var(--blue);font-style:normal;margin-left:4px}
+.hstat span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-hint{position:absolute;bottom:34px;left:6vw;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted);display:flex;align-items:center;gap:12px}
+.scroll-hint::after{content:"";width:1px;height:44px;background:linear-gradient(var(--cyan),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- MARQUEE ---------- */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:18px 0;background:var(--surface)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:mq 26s linear infinite}
+.marquee span{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:56px}
+.marquee i{font-style:normal;color:var(--blue)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- CARDS problemi ---------- */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.p-card{
+  border:1px solid var(--line);background:var(--surface);padding:32px;position:relative;overflow:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s;
+}
+.p-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--magenta);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.p-card:hover{transform:translateY(-6px);border-color:rgba(255,46,99,.4)}
+.p-card:hover::before{transform:scaleX(1)}
+.p-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:19px;margin-bottom:12px}
+.p-card p{color:var(--muted);font-size:14.5px;line-height:1.7}
+.p-card .n{font-family:'Space Mono',monospace;color:rgba(255,46,99,.55);font-size:11px;letter-spacing:.3em;display:block;margin-bottom:16px}
+
+/* ---------- soluzione ---------- */
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.s-card{border:1px solid var(--line);background:var(--surface);padding:30px;position:relative;overflow:hidden;transition:.4s}
+.s-card::after{
+  content:"";position:absolute;inset:-60%;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(31,107,255,.16),transparent 45%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.s-card:hover::after{opacity:1}
+.s-card:hover{border-color:rgba(31,107,255,.45)}
+.s-card .ico{width:42px;height:42px;border:1px solid var(--blue);display:grid;place-items:center;margin-bottom:20px;color:var(--cyan);font-size:18px;background:rgba(31,107,255,.08)}
+.s-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:17px;margin-bottom:10px}
+.s-card p{color:var(--muted);font-size:14px;line-height:1.7}
+
+/* ---------- processo ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:60px;position:relative}
+.step{border:1px solid var(--line);background:var(--surface);padding:34px 26px;position:relative}
+.step .num{
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:56px;
+  color:transparent;-webkit-text-stroke:1px rgba(31,107,255,.7);line-height:1;
+}
+.step h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:18px;margin:18px 0 12px}
+.step p{color:var(--muted);font-size:14px;line-height:1.7}
+.step::after{content:"→";position:absolute;top:50%;right:-16px;color:var(--blue);font-size:20px;z-index:2}
+.step:last-child::after{display:none}
+@media(max-width:1050px){.step::after{display:none}}
+.pline{position:absolute;top:-30px;left:0;width:100%;height:2px;background:rgba(255,255,255,.05)}
+.pline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+
+/* ---------- pricing ---------- */
+.billing{display:flex;gap:0;border:1px solid var(--line);width:fit-content;margin:44px auto 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.billing button{
+  background:none;border:none;color:var(--muted);padding:14px 22px;cursor:none;font:inherit;
+  border-right:1px solid var(--line);transition:.3s;position:relative
+}
+.billing button:last-child{border-right:none}
+.billing button.active{color:#fff;background:var(--blue)}
+.billing button b{color:var(--green);margin-left:6px}
+.billing button.active b{color:#bfffe6}
+
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin-top:52px;perspective:1400px}
+.plan{
+  --pc:var(--blue);
+  border:1px solid var(--line);background:var(--surface);padding:34px 28px;position:relative;
+  transform-style:preserve-3d;transition:border-color .4s;overflow:hidden;
+}
+.plan::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--pc)}
+.plan .holo{
+  position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,rgba(0,229,255,.1) 50%,rgba(255,255,255,.07) 55%,transparent 70%);
+  background-size:250% 250%;background-position:var(--hx,50%) 0;
+}
+.plan:hover .holo{opacity:1}
+.plan:hover{border-color:var(--pc)}
+.plan .tag{position:absolute;top:16px;right:16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;padding:5px 10px;background:var(--pc);color:#04060a;font-weight:700}
+.plan h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;font-size:24px;color:var(--pc)}
+.price{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:52px;margin:18px 0 4px;display:flex;align-items:baseline;gap:6px}
+.price .cur{font-size:26px;color:var(--pc)}
+.price .per{font-size:14px;color:var(--muted);font-weight:500;font-style:normal;font-family:'Space Grotesk',sans-serif}
+.pervideo{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:22px}
+.pervideo b{color:var(--pc)}
+.vbox{border:1px solid var(--pc);text-align:center;padding:12px;font-weight:700;margin-bottom:24px;background:color-mix(in srgb,var(--pc) 8%,transparent);font-size:15px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px}
+.plan li{color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan .ideal{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--pc);margin-bottom:10px}
+.plan .ideal-list{color:var(--muted);font-size:12.5px;line-height:1.8;margin-bottom:26px}
+.cta-btn{
+  display:block;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+  padding:16px;background:var(--pc);color:#04060a;position:relative;overflow:hidden;transition:.3s;
+}
+.cta-btn:hover{filter:brightness(1.15);box-shadow:0 0 30px color-mix(in srgb,var(--pc) 45%,transparent)}
+.plan.medium{--pc:var(--cyan)}
+.plan.premium{--pc:var(--amber)}
+.plan.ultimate{--pc:var(--magenta)}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;margin-top:52px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--surface)}
+th,td{padding:15px 18px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+td:first-child,th:first-child{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+th{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:14px}
+th small{display:block;font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+th.c-basic{color:var(--blue)}th.c-medium{color:var(--cyan)}th.c-premium{color:var(--amber)}th.c-ultimate{color:var(--magenta)}
+td .ok{color:var(--green);font-weight:700}
+td .no{color:rgba(255,255,255,.18)}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(31,107,255,.06)}
+
+/* ---------- saving ---------- */
+.save-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.save-card{border:1px solid var(--line);background:var(--surface);padding:30px;border-left:3px solid var(--green);transition:.35s}
+.save-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.save-card.gold{border-left-color:var(--amber)}
+.save-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:16px;margin-bottom:10px;color:var(--green)}
+.save-card.gold h3{color:var(--amber)}
+.save-card p{color:var(--muted);font-size:13.5px;line-height:1.7}
+
+/* ---------- portfolio ---------- */
+.works{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.work{
+  --wc:var(--blue);
+  border:1px solid var(--wc);aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--surface);
+  display:flex;flex-direction:column;justify-content:space-between;padding:22px;transition:.4s;
+}
+.work:hover{box-shadow:0 0 40px color-mix(in srgb,var(--wc) 30%,transparent);transform:scale(1.02)}
+.work .cat{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--wc)}
+.work .lbl{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--wc);border:1px solid var(--wc);
+  padding:10px 18px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);white-space:nowrap;transition:.4s;
+}
+.work:hover .lbl{transform:translate(-50%,-50%) scale(1.08)}
+.work .meta b{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:16px;display:block}
+.work .meta span{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ---------- testimonianze ---------- */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:52px}
+.quote{border:1px solid var(--line);background:var(--surface);padding:30px;border-top:3px solid var(--blue);display:flex;flex-direction:column;gap:22px}
+.quote p{color:var(--txt);font-size:15px;line-height:1.75;font-style:italic}
+.quote .who{display:flex;align-items:center;gap:14px}
+.quote .av{width:44px;height:44px;border-radius:50%;border:2px solid var(--blue);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:900;font-style:italic}
+.quote .who b{display:block;font-size:14px}
+.quote .who span{font-size:12px;color:var(--muted)}
+.quote .kpi{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;color:var(--blue);margin-top:auto}
+.quote .kpi small{font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--muted);display:block;text-transform:uppercase}
+.stars{color:var(--amber);letter-spacing:3px}
+
+/* ---------- footer cta ---------- */
+.final{text-align:center;padding:150px 6vw}
+.final h2{font-size:clamp(38px,6.5vw,86px)}
+.final .lead{margin:22px auto 46px}
+.btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.big-btn{
+  font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+  padding:20px 40px;text-decoration:none;position:relative;overflow:hidden;transition:.35s;display:inline-block;
+}
+.big-btn.b1{background:var(--blue);color:#fff}
+.big-btn.b2{border:1px solid var(--line);color:var(--txt)}
+.big-btn.b3{background:var(--green);color:#04140c}
+.big-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(31,107,255,.3)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:960px;margin:70px auto 0}
+.contact{border:1px solid var(--line);padding:20px;text-align:left;background:var(--surface);transition:.3s}
+.contact:hover{border-color:var(--blue)}
+.contact span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px}
+.contact b{font-size:14px;font-weight:500}
+footer{border-top:1px solid var(--line);padding:26px 6vw;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+/* reveal base */
+.rv{opacity:0;transform:translateY(36px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  body{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+}
+@media(max-width:640px){
+  section{padding:80px 6vw}
+  .hstat{padding:16px 20px}
+  .hstat b{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+<canvas id="net"></canvas>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">07 — Vertex Studios</div>
+  <h1><span class="glitch scramble" data-txt="WEB / APP">WEB / APP</span><br>
+      <span class="glitch scramble accent" data-txt="DEVELOPMENT">DEVELOPMENT</span></h1>
+  <p class="hero-sub">Progettiamo e sviluppiamo siti web, web app e applicazioni su misura. Dalla landing page al prodotto SaaS completo, ogni progetto è costruito con le tecnologie più moderne e un'attenzione ossessiva alle performance.</p>
+  <div class="chips">
+    <span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Node.js</span>
+    <span class="chip">TypeScript</span><span class="chip">SQL</span><span class="chip">REST API</span><span class="chip">Vercel</span>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b><span class="count" data-to="48">0</span><span class="u">h</span></b><span>Primo prototipo</span></div>
+    <div class="hstat"><b><span class="count" data-to="99">0</span><span class="u">%</span></b><span>Uptime garantito</span></div>
+    <div class="hstat"><b><span class="count" data-to="60">0</span><span class="u">+</span></b><span>Progetti consegnati</span></div>
+    <div class="hstat"><b><span class="count" data-to="100">0</span><span class="u">%</span></b><span>Mobile first</span></div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-track" id="mqt">
+  <span>Frontend <i>✦</i> Backend <i>✦</i> Database <i>✦</i> API Integration <i>✦</i> Deploy & DevOps <i>✦</i> Performance <i>✦</i> SEO Tecnico <i>✦</i></span>
+  <span>Frontend <i>✦</i> Backend <i>✦</i> Database <i>✦</i> API Integration <i>✦</i> Deploy & DevOps <i>✦</i> Performance <i>✦</i> SEO Tecnico <i>✦</i></span>
+</div></div>
+
+<!-- PROBLEMI -->
+<section>
+  <div class="eyebrow" style="color:var(--magenta)">Il problema</div>
+  <h2 class="rv">Il tuo sito ti sta<br>costando clienti ogni giorno.</h2>
+  <div class="grid-2">
+    <div class="p-card rv"><span class="n">ERR_01</span><h3>Sito lento o obsoleto</h3><p>Un sito che carica in più di 3 secondi perde oltre il 53% dei visitatori prima ancora che vedano il contenuto.</p></div>
+    <div class="p-card rv"><span class="n">ERR_02</span><h3>Non ottimizzato per mobile</h3><p>Più del 70% del traffico arriva da smartphone. Un layout non responsive brucia conversioni in modo silenzioso.</p></div>
+    <div class="p-card rv"><span class="n">ERR_03</span><h3>Nessuna scalabilità</h3><p>Soluzioni improvvisate, CMS pesanti o codice non strutturato che collassano quando cresci o quando arriva traffico.</p></div>
+    <div class="p-card rv"><span class="n">ERR_04</span><h3>Zero visibilità su Google</h3><p>Senza SEO tecnico corretto — Core Web Vitals, struttura, meta — il tuo sito è invisibile ai motori di ricerca.</p></div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section>
+  <div class="eyebrow">La soluzione</div>
+  <h2 class="rv">Vertex Studios<br>costruisce il tuo digital product.</h2>
+  <p class="lead rv">Descrivi il tuo progetto. Il resto è compito nostro.</p>
+  <div class="grid-3">
+    <div class="s-card rv"><div class="ico">&lt;/&gt;</div><h3>Frontend Development</h3><p>Interfacce React / Next.js veloci, accessibili e pixel-perfect su ogni dispositivo.</p></div>
+    <div class="s-card rv"><div class="ico">⚙</div><h3>Backend Development</h3><p>API REST e logica server in Node.js, con architettura scalabile e sicura fin dal primo deploy.</p></div>
+    <div class="s-card rv"><div class="ico">▦</div><h3>Database & SQL</h3><p>Progettazione di schema, query ottimizzate e gestione dati con PostgreSQL, MySQL o SQLite.</p></div>
+    <div class="s-card rv"><div class="ico">↔</div><h3>API Integration</h3><p>Connessione a servizi terzi: pagamenti, CRM, analytics, AI, social e qualsiasi REST/GraphQL API.</p></div>
+    <div class="s-card rv"><div class="ico">◱</div><h3>Design UI/UX</h3><p>Wireframe e design system in Figma prima di scrivere una sola riga di codice.</p></div>
+    <div class="s-card rv"><div class="ico">↕</div><h3>Responsive & Mobile</h3><p>Mobile-first di default: ogni layout viene testato su decine di breakpoint prima della consegna.</p></div>
+    <div class="s-card rv"><div class="ico">◎</div><h3>SEO Tecnico</h3><p>Core Web Vitals, meta, sitemap, structured data e performance audit per dominare i risultati di ricerca.</p></div>
+    <div class="s-card rv"><div class="ico">▣</div><h3>CMS / Headless</h3><p>Sanity, Strapi, Contentful o WordPress headless: gestisci i contenuti in autonomia, senza toccare il codice.</p></div>
+    <div class="s-card rv"><div class="ico">🛒</div><h3>E-commerce</h3><p>Shopify, WooCommerce o store custom con carrello, pagamenti Stripe e gestione ordini integrata.</p></div>
+    <div class="s-card rv"><div class="ico">⚡</div><h3>Performance</h3><p>Lighthouse 90+, lazy loading, CDN, caching e ottimizzazione immagini per tempi di caricamento sub-secondo.</p></div>
+    <div class="s-card rv"><div class="ico">▲</div><h3>Deploy & DevOps</h3><p>CI/CD su Vercel, Railway o AWS. Deploy automatici, environment separati e zero downtime.</p></div>
+    <div class="s-card rv"><div class="ico">★</div><h3>Manutenzione & Support</h3><p>Aggiornamenti, monitoring, backup e assistenza continuativa per tenere il tuo prodotto sempre online.</p></div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section>
+  <div class="eyebrow">Come funziona</div>
+  <h2 class="rv">Il nostro processo in 4 step.</h2>
+  <div class="steps">
+    <div class="pline"><i id="pline"></i></div>
+    <div class="step rv"><div class="num">01</div><h3>Brief & analisi</h3><p>Raccogliamo requisiti, obiettivi e vincoli tecnici. Definiamo stack, architettura e timeline.</p></div>
+    <div class="step rv"><div class="num">02</div><h3>Design & prototipo</h3><p>Wireframe e mockup in Figma per validare struttura e UI prima di scrivere codice.</p></div>
+    <div class="step rv"><div class="num">03</div><h3>Sviluppo & test</h3><p>Sprint iterativi con deploy preview ad ogni feature. Code review, test e ottimizzazione performance.</p></div>
+    <div class="step rv"><div class="num">04</div><h3>Launch & handoff</h3><p>Deploy in produzione, documentazione completa e formazione sul CMS o pannello admin.</p></div>
+  </div>
+</section>
+
+<!-- PREZZI -->
+<section id="prezzi">
+  <div class="eyebrow">Pacchetti &amp; prezzi</div>
+  <h2 class="rv" style="text-align:center">Scegli il piano giusto per te.</h2>
+  <div class="billing rv" id="billing">
+    <button class="active" data-mode="0">Una tantum</button>
+    <button data-mode="1">+ Manutenzione <b>→</b></button>
+  </div>
+  <div class="plans">
+    <div class="plan rv" data-tilt><div class="holo"></div>
+      <h3>Starter</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="799">799</span><span class="per"></span></div>
+      <div class="pervideo">Landing page <b class="pv">professionale</b></div>
+      <div class="vbox">1 pagina · consegna 5gg</div>
+      <ul><li>Design UI/UX su misura</li><li>Responsive mobile-first</li><li>SEO base + meta tag</li><li>Deploy incluso</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Freelance · Professionisti · Startup in fase seed · Event page</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan medium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Più scelto</span>
+      <h3>Business</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="2499">2.499</span><span class="per"></span></div>
+      <div class="pervideo">Sito completo <b class="pv">multi-pagina</b></div>
+      <div class="vbox">fino a 10 pagine · CMS incluso</div>
+      <ul><li>Tutto di Starter</li><li>CMS headless</li><li>Blog / portfolio</li><li>Form contatti + integrazioni</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">PMI · Agenzie · Brand locali · Portfolio creativo</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan premium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Consigliato</span>
+      <h3>Web App</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="5999">5.999</span><span class="per"></span></div>
+      <div class="pervideo">Applicazione <b class="pv">full-stack</b></div>
+      <div class="vbox">Auth · DB · API · Dashboard</div>
+      <ul><li>Tutto di Business</li><li>Autenticazione utenti</li><li>Database + API custom</li><li>Dashboard admin</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">SaaS · Piattaforme · Marketplace · Tool interni</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan ultimate rv" data-tilt><div class="holo"></div>
+      <h3>Enterprise</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="9999">9.999</span><span class="per">+</span></div>
+      <div class="pervideo">Prodotto <b class="pv">su misura</b></div>
+      <div class="vbox">Architettura · Scalabilità · Team</div>
+      <ul><li>Tutto di Web App</li><li>Architettura scalabile</li><li>CI/CD + monitoring</li><li>Team dedicato</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Scale-up · Aziende strutturate · Prodotti ad alto traffico</div>
+      <a href="#contatti" class="cta-btn">Richiedi un preventivo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONFRONTO -->
+<section>
+  <div class="eyebrow">Confronto pacchetti</div>
+  <h2 class="rv">Ogni feature, a confronto.</h2>
+  <div class="tbl-wrap rv">
+  <table>
+    <thead><tr>
+      <th>Feature</th>
+      <th class="c-basic">Starter<small>€799</small></th>
+      <th class="c-medium">Business<small>€2.499</small></th>
+      <th class="c-premium">Web App<small>€5.999</small></th>
+      <th class="c-ultimate">Enterprise<small>€9.999+</small></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Frontend Development</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Design UI/UX (Figma)</td><td>Base</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td>Custom</td></tr>
+      <tr><td>Responsive & Mobile</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>SEO Tecnico</td><td>Base</td><td>Avanzato</td><td>Avanzato</td><td>Completo</td></tr>
+      <tr><td>CMS / Headless</td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Backend Development</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Database & SQL</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>API Integration</td><td>Base</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td>Custom</td></tr>
+      <tr><td>Autenticazione utenti</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>E-commerce</td><td><span class="no">—</span></td><td>Add-on</td><td><span class="ok">✓</span></td><td>Custom</td></tr>
+      <tr><td>Deploy & DevOps</td><td>Vercel</td><td>Vercel</td><td>Cloud</td><td>Infra dedicata</td></tr>
+      <tr><td>Manutenzione & Support</td><td><span class="no">—</span></td><td>Add-on</td><td>3 mesi</td><td>12 mesi</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- RISPARMIO -->
+<section>
+  <div class="eyebrow" style="color:var(--green)">Perché scegliere Vertex Studios</div>
+  <h2 class="rv">Non solo sviluppo.<br><span style="color:var(--green)">Strategia</span> e <span style="color:var(--amber)">risultati</span>.</h2>
+  <div class="save-grid">
+    <div class="save-card rv"><h3>Consegna garantita</h3><p>Ogni progetto ha una deadline concordata. Rispettiamo i tempi o emettiamo un credito sulle prossime fasi.</p></div>
+    <div class="save-card rv"><h3>Performance-first</h3><p>Lighthouse 90+ su ogni progetto. Non rilasciamo nulla che non passi l'audit di performance e accessibilità.</p></div>
+    <div class="save-card rv"><h3>Codice tuo, sempre</h3><p>Tutto il codice sorgente ti appartiene. Repository GitHub privato trasferito a te alla consegna finale.</p></div>
+    <div class="save-card rv"><h3>Stack moderno e scalabile</h3><p>React, Next.js, Node.js, TypeScript: tecnologie mature, supportate e pronte a crescere con il tuo business.</p></div>
+    <div class="save-card gold rv"><h3>Design system incluso</h3><p>Nei piani Business e superiori ricevi il Figma file completo con componenti, token e guida agli stili riutilizzabili.</p></div>
+    <div class="save-card gold rv"><h3>Formazione e handoff</h3><p>Sessione di onboarding inclusa: ti insegniamo a gestire CMS, aggiornamenti e monitorare le performance in autonomia.</p></div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section>
+  <div class="eyebrow">Portfolio lavori</div>
+  <h2 class="rv">Il nostro lavoro<br>parla da solo.</h2>
+  <div class="works">
+    <div class="work rv" style="--wc:var(--blue)"><span class="cat">Landing Page</span><div class="lbl">SaaS Startup</div><div class="meta"><b>Conversion +180%</b><span>Next.js · Framer Motion</span></div></div>
+    <div class="work rv" style="--wc:var(--cyan)"><span class="cat">Web App</span><div class="lbl">Dashboard Analytics</div><div class="meta"><b>10K+ utenti attivi</b><span>React · Node · PostgreSQL</span></div></div>
+    <div class="work rv" style="--wc:var(--amber)"><span class="cat">E-commerce</span><div class="lbl">Fashion Brand</div><div class="meta"><b>€200K+ vendite/mese</b><span>Shopify · Custom theme</span></div></div>
+    <div class="work rv" style="--wc:var(--magenta)"><span class="cat">Corporate Site</span><div class="lbl">Studio Legale</div><div class="meta"><b>Lighthouse 98/100</b><span>Next.js · Sanity CMS</span></div></div>
+    <div class="work rv" style="--wc:var(--green)"><span class="cat">Piattaforma</span><div class="lbl">Marketplace B2B</div><div class="meta"><b>500+ venditori</b><span>Full-stack · Stripe · SQL</span></div></div>
+    <div class="work rv" style="--wc:#ff6a1f"><span class="cat">Tool Interno</span><div class="lbl">CRM Custom</div><div class="meta"><b>-60% tempo ops</b><span>React · REST API · Auth</span></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section>
+  <div class="eyebrow">Cosa dicono i nostri clienti</div>
+  <h2 class="rv">Risultati reali.<br>Storie vere.</h2>
+  <div class="quotes">
+    <div class="quote rv">
+      <div class="stars">★★★★★</div>
+      <p>"Il sito che ci hanno consegnato ha triplicato le richieste di contatto nel primo mese. Lighthouse 97 e mobile perfetto."</p>
+      <div class="who"><div class="av" style="border-color:var(--blue)">L</div><div><b>Luca M.</b><span>CEO · Studio di architettura</span></div></div>
+      <div class="kpi">+<span class="count" data-to="210">0</span>%<small>Lead generati</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--cyan)">
+      <div class="stars">★★★★★</div>
+      <p>"Hanno costruito la nostra piattaforma da zero in 6 settimane. Codice pulito, documentazione impeccabile, zero bug in produzione."</p>
+      <div class="who"><div class="av" style="border-color:var(--cyan)">S</div><div><b>Sara T.</b><span>CTO · SaaS B2B</span></div></div>
+      <div class="kpi" style="color:var(--cyan)"><span class="count" data-to="60">0</span>+<small>Progetti consegnati</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--amber)">
+      <div class="stars">★★★★★</div>
+      <p>"E-commerce completamente custom, integrazione Stripe perfetta. Le vendite online sono passate da zero a €200K al mese."</p>
+      <div class="who"><div class="av" style="border-color:var(--amber)">R</div><div><b>Roberto F.</b><span>Founder · Fashion Brand</span></div></div>
+      <div class="kpi" style="color:var(--amber)">99<span style="font-size:22px">%</span><small>Uptime garantito</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final" id="contatti" style="border-bottom:none">
+  <div class="eyebrow" style="justify-content:center">Inizia oggi</div>
+  <h2 class="rv">Pronto a <span style="background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">costruire</span><br>il tuo prodotto digitale?</h2>
+  <p class="lead rv">Raccontaci il tuo progetto. Risposta entro 24 ore.</p>
+  <div class="btn-row rv">
+    <a href="mailto:info@vert-ex.it" class="big-btn b1" data-mag>Contattaci ora</a>
+    <a href="#prezzi" class="big-btn b2" data-mag>Vedi i pacchetti</a>
+    <a href="mailto:info@vert-ex.it?subject=Brief%20progetto%20web" class="big-btn b3" data-mag>Invia il brief</a>
+  </div>
+  <div class="contacts">
+    <div class="contact rv"><span>Email</span><b>info@vert-ex.it</b></div>
+    <div class="contact rv"><span>Instagram</span><b>@vertex.italia</b></div>
+    <div class="contact rv"><span>WhatsApp</span><b>+39 000 000 0000</b></div>
+    <div class="contact rv"><span>Web</span><b>www.vert-ex.it</b></div>
+  </div>
+</section>
+
+</main>
+<footer>Vertex Studios · Web / App Development · vert-ex.it</footer>
+
+<script>
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- neural particle field ---------- */
+const cv=document.getElementById('net'),cx=cv.getContext('2d');
+let W,H,pts=[],mouse={x:-9999,y:-9999};
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const n=Math.min(90,Math.floor(W*H/16000));
+  pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35}));
+}
+resize();addEventListener('resize',resize);
+addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+function tick(){
+  cx.clearRect(0,0,W,H);
+  for(const p of pts){
+    const dx=mouse.x-p.x,dy=mouse.y-p.y,d=Math.hypot(dx,dy);
+    if(d<180){p.vx-=dx/d*.02;p.vy-=dy/d*.02}
+    p.x+=p.vx;p.y+=p.vy;
+    p.vx*=.995;p.vy*=.995;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+  }
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<130){
+        cx.strokeStyle=`rgba(31,107,255,${(1-d/130)*.28})`;
+        cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();
+      }
+    }
+    cx.fillStyle='rgba(0,229,255,.7)';
+    cx.beginPath();cx.arc(pts[i].x,pts[i].y,1.4,0,7);cx.fill();
+  }
+  requestAnimationFrame(tick);
+}
+if(!reduced)tick();
+
+/* ---------- custom cursor ---------- */
+const dot=document.getElementById('cdot'),ring=document.getElementById('cring');
+let rx=0,ry=0,tx=0,ty=0;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;dot.style.transform=`translate(${tx}px,${ty}px) translate(-50%,-50%)`});
+(function loop(){rx+=(tx-rx)*.16;ry+=(ty-ry)*.16;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.chip,.work,.plan').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+});
+
+/* ---------- GSAP setup ---------- */
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#progress',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+document.querySelectorAll('.rv').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',
+    scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+gsap.to('#pline',{width:'100%',ease:'none',
+  scrollTrigger:{trigger:'.steps',start:'top 80%',end:'bottom 60%',scrub:.5}});
+
+/* ---------- text scramble on hero ---------- */
+const CHARS='!<>-_\\/[]{}—=+*^?#01';
+function scramble(el){
+  const final=el.dataset.txt;let frame=0;
+  const total=Math.max(24,final.length*2.2);
+  (function step(){
+    let out='';
+    for(let i=0;i<final.length;i++){
+      const reveal=frame/total*final.length*1.4;
+      out+= i<reveal ? final[i] : (final[i]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+    }
+    el.textContent=out;
+    if(frame++<total)requestAnimationFrame(step);
+    else{el.textContent=final;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)}
+  })();
+}
+if(!reduced){
+  document.querySelectorAll('.scramble').forEach((el,i)=>setTimeout(()=>scramble(el),300+i*450));
+  setInterval(()=>{const els=document.querySelectorAll('.glitch');const el=els[Math.floor(Math.random()*els.length)];el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)},6000);
+}
+
+/* ---------- counters ---------- */
+function fmt(v,dec){return dec?v.toFixed(dec):Math.round(v).toLocaleString('it-IT')}
+document.querySelectorAll('.count').forEach(el=>{
+  const to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0);
+  ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>{
+    const o={v:0};
+    gsap.to(o,{v:to,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=fmt(o.v,dec)});
+  }});
+});
+
+/* ---------- billing toggle ---------- */
+const labels=[['',''],['+ €149/mese','+ €249/mese']];
+let mode=0;
+document.getElementById('billing').addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return;
+  mode=+btn.dataset.mode;
+  document.querySelectorAll('#billing button').forEach(b=>b.classList.toggle('active',b===btn));
+});
+
+/* ---------- 3D tilt + holo sheen ---------- */
+if(!reduced){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      gsap.to(card,{rotateY:(px-.5)*10,rotateX:(.5-py)*10,duration:.4,transformPerspective:900});
+      card.style.setProperty('--hx',(px*100)+'%');
+      const holo=card.querySelector('.holo');
+      if(holo)holo.style.backgroundPosition=(px*180)+'% 0';
+    });
+    card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.6,ease:'elastic.out(1,.5)'}));
+  });
+  document.querySelectorAll('.s-card').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+  document.querySelectorAll('[data-mag]').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.28,y:(e.clientY-r.top-r.height/2)*.28,duration:.35});
+    });
+    b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.55,ease:'elastic.out(1,.4)'}));
+  });
+}
+</script>
+</body>
+</html>
