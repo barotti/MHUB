@@ -1,20 +1,321 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Short Form Content - M3STUDIO</title>
-  <meta name="description" content="Reels, TikTok e Shorts ottimizzati per ritmo, retention e pubblicazione multi-canale." />
-  <link rel="stylesheet" href="../css/style.css?v=20260607-services" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Form Content | Vertex Group</title>
+<meta name="description" content="Contenuti verticali per TikTok, Instagram Reels e YouTube Shorts: ideazione, editing, ritmo, sottotitoli e formati ottimizzati per retention e conversione.">
+<link rel="canonical" href="https://www.vert-ex.it/"><!-- canonical placeholder -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23050810' width='100' height='100'/><path fill='%23086CFF' d='M20 25h20l10 30 10-30h20L55 78H45z'/></svg>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Short Form Content | Vertex Group">
+<meta property="og:description" content="Short form content per creator, brand e aziende: video verticali pensati per attenzione, retention e crescita.">
+<meta property="og:url" content="https://www.vert-ex.it/">
+<meta property="og:locale" content="it_IT">
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Short Form Content",
+  "description": "Produzione ed editing di contenuti verticali per TikTok, Instagram Reels e YouTube Shorts.",
+  "url": "https://www.vert-ex.it/",
+  "email": "info@vert-ex.it"
+}
+</script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- CSS -->
+<link rel="stylesheet" href="short-form-content/css/style.css">
+<link rel="stylesheet" href="short-form-content/css/responsive.css">
+
+<!-- Librerie via CDN (build UMD: massima compatibilita anche via file://) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<!-- Script progetto (l'ordine conta: dati -> scena 3D -> DOM -> animazioni) -->
+<script src="short-form-content/js/data.js" defer></script>
+<script src="short-form-content/js/three-scene.js" defer></script>
+<script src="short-form-content/js/app.js" defer></script>
+<script src="short-form-content/js/scroll-animations.js" defer></script>
 </head>
 <body>
-  <main class="service-page">
-    <a class="service-back" href="../index.html#services">Torna ai servizi</a>
-    <p class="eyebrow">M3STUDIO / Servizio 02</p>
-    <h1>Short Form Content</h1>
-    <p>Format brevi progettati per catturare attenzione nei primi secondi, aumentare retention e scalare sui canali social.</p>
-    <div class="service-page-tags"><span>TikTok</span><span>Reels</span><span>Shorts</span></div>
-    <a class="service-page-cta" href="../index.html#contact">Richiedi un progetto</a>
-  </main>
+
+<a class="skip-link" href="#hero">Salta al contenuto</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar" id="navbar">
+  <nav aria-label="Navigazione principale">
+    <a class="nav-logo" href="#hero" aria-label="Short Form Content - torna all'inizio">
+      SHORT<span>FORM</span><i class="nav-play" aria-hidden="true"></i>
+    </a>
+    <button class="nav-burger" id="navBurger" aria-label="Apri menu" aria-expanded="false" aria-controls="navMenu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="#soluzione" class="nav-link">Servizi</a></li>
+      <li><a href="#processo" class="nav-link">Processo</a></li>
+      <li><a href="#pacchetti" class="nav-link">Pacchetti</a></li>
+      <li><a href="#risultati" class="nav-link">Risultati</a></li>
+      <li><a href="#contatti" class="nav-link">Contatti</a></li>
+      <li><a href="#demo" class="nav-cta">Richiedi una demo</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ============ SFONDO 3D ============ -->
+<div class="gl-wrap" aria-hidden="true">
+  <canvas id="gl-canvas"></canvas>
+  <div class="bg-grid"></div>
+  <!-- Label tecniche dei layer (visibili solo durante l'esplosione) -->
+  <div class="layer-labels" id="layerLabels"></div>
+</div>
+<div class="no-webgl" id="noWebgl" hidden>
+  <p>Il tuo browser non supporta WebGL: l'esperienza 3D e disattivata, ma tutti i contenuti restano disponibili.</p>
+</div>
+
+<main id="main">
+
+<!-- ============ 1. HERO ============ -->
+<section class="section hero" id="hero" aria-labelledby="hero-title">
+  <p class="eyebrow reveal">Short Form Content Studio</p>
+  <h1 id="hero-title" class="hero-title">
+    <span class="mask-line"><span>SHORT</span></span>
+    <span class="mask-line"><span>FORM</span></span>
+    <span class="mask-line accent"><span>CONTENT</span></span>
+  </h1>
+  <p class="hero-sub reveal">Contenuti verticali ad alta retention per creator, brand e aziende</p>
+  <p class="hero-tags reveal">TikTok - Instagram Reels - YouTube Shorts - UGC - Ads</p>
+  <div class="hero-cta reveal">
+    <a class="btn btn-primary" href="#pacchetti">Scopri i pacchetti</a>
+    <a class="btn btn-ghost" href="#demo">Richiedi una demo</a>
+  </div>
+  <div class="scroll-indicator" aria-hidden="true">
+    <span>SCROLL TO EDIT</span>
+    <i></i>
+  </div>
+</section>
+
+<!-- ============ 2. PROBLEMA ============ -->
+<section class="section problema" id="problema" aria-labelledby="problema-title">
+  <div class="half-left">
+    <p class="eyebrow eyebrow-danger reveal">Il problema dei contenuti digitali</p>
+    <h2 id="problema-title" class="reveal">Il tuo contenuto<br>ti sta frenando.</h2>
+    <ul class="warning-list" role="list">
+      <li class="warning-panel reveal">
+        <span class="w-ico" aria-hidden="true">T</span>
+        <div><h3>Mancanza di tempo</h3>
+        <p>L'editing manuale richiede ore per ogni singolo video, sottraendo tempo alla strategia e alla crescita.</p></div>
+      </li>
+      <li class="warning-panel reveal">
+        <span class="w-ico" aria-hidden="true">v</span>
+        <div><h3>Bassa retention</h3>
+        <p>Contenuti mal tagliati perdono l'audience nei primi 3 secondi. L'algoritmo ti penalizza.</p>
+        <svg class="retention-line" viewBox="0 0 200 44" aria-hidden="true" focusable="false">
+          <path id="retentionPath" d="M0 6 C 40 8, 70 14, 100 24 S 170 40, 200 42" fill="none" stroke="#FF2E70" stroke-width="2"/>
+        </svg></div>
+      </li>
+      <li class="warning-panel reveal">
+        <span class="w-ico" aria-hidden="true">X</span>
+        <div><h3>Contenuti poco dinamici</h3>
+        <p>Clip statiche, transizioni lente, audio grezzo: il tuo pubblico scorre oltre.</p></div>
+      </li>
+      <li class="warning-panel reveal">
+        <span class="w-ico" aria-hidden="true">!</span>
+        <div><h3>Pubblicazione incostante</h3>
+        <p>Senza un flusso regolare di contenuti la crescita si blocca e la pagina perde visibilita.</p></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 3. SOLUZIONE (esplosione layer) ============ -->
+<section class="section soluzione" id="soluzione" aria-labelledby="soluzione-title">
+  <div class="soluzione-head">
+    <p class="eyebrow reveal">La soluzione</p>
+    <h2 id="soluzione-title" class="reveal">Short Form Content<br>si occupa di tutto.</h2>
+    <p class="lead reveal">Consegnaci video, idee o clip grezze. Il resto e compito nostro.</p>
+  </div>
+  <div class="services-grid">
+    <article class="service reveal"><h3>Editing ultra-rapido</h3><p>Motion graphics, transizioni e ritmo visivo che cattura l'attenzione nei primi secondi.</p></article>
+    <article class="service reveal"><h3>Verticale nativo</h3><p>9:16 ottimizzato per TikTok, Reels e Shorts con composizione studiata.</p></article>
+    <article class="service reveal"><h3>Retention Maximizer</h3><p>Struttura narrativa e pacing costruiti per massimizzare il watch-time.</p></article>
+    <article class="service reveal"><h3>Audio &amp; Branding</h3><p>Sound design, musica licenziata, watermark e colori brand integrati.</p></article>
+    <article class="service reveal"><h3>Piano editoriale</h3><p>Consegne cadenzate per mantenere alta la frequenza di pubblicazione.</p></article>
+    <article class="service reveal"><h3>Qualita garantita</h3><p>Revisioni incluse. Non siamo soddisfatti finche non lo sei tu.</p></article>
+  </div>
+</section>
+
+<!-- ============ 4. PROCESSO ============ -->
+<section class="section processo" id="processo" aria-labelledby="processo-title">
+  <p class="eyebrow reveal">Come funziona</p>
+  <h2 id="processo-title" class="reveal">Il nostro processo in 4 step.</h2>
+  <p class="step-counter" id="stepCounter" aria-live="polite">01 / 04</p>
+  <ol class="steps" role="list">
+    <li class="pstep" data-step="1">
+      <span class="pstep-num">01</span>
+      <h3>Ricezione Clip</h3>
+      <p>Carica le clip grezze tramite link Drive, WeTransfer o Dropbox. Qualsiasi formato accettato.</p>
+    </li>
+    <li class="pstep" data-step="2">
+      <span class="pstep-num">02</span>
+      <h3>Editing</h3>
+      <p>Il nostro team lavora: tagli, transizioni, motion graphics, sync audio e ottimizzazione colore.</p>
+    </li>
+    <li class="pstep" data-step="3">
+      <span class="pstep-num">03</span>
+      <h3>Ottimizzazione</h3>
+      <p>Ogni video viene ottimizzato per la piattaforma target: hook, ratio, caption, hashtag strategy.</p>
+    </li>
+    <li class="pstep" data-step="4">
+      <span class="pstep-num">04</span>
+      <h3>Consegna</h3>
+      <p>Ricevi i video pronti per la pubblicazione via link privato. Feedback e revisioni inclusi.</p>
+    </li>
+  </ol>
+  <p class="turnaround reveal">Turnaround garantito in <strong>24-48 ore</strong> dalla ricezione delle clip.</p>
+</section>
+
+<!-- ============ 5. BEFORE / AFTER ============ -->
+<section class="section beforeafter" id="beforeafter" aria-labelledby="ba-title">
+  <h2 id="ba-title" class="ba-title reveal">DA CLIP GREZZA<br><span class="accent-text">A CONTENUTO CHE FERMA LO SCROLL.</span></h2>
+  <div class="ba-stage" id="baStage">
+    <figure class="ba-panel ba-before" aria-label="Prima: clip grezza">
+      <div class="ba-media ba-media-raw">
+        <video preload="metadata" muted playsinline aria-hidden="true">
+          <source src="short-form-content/assets/videos/sport-raw.mp4" type="video/mp4">
+        </video>
+        <div class="ba-fallback ba-fallback-raw" aria-hidden="true"><span>RAW FOOTAGE</span></div>
+      </div>
+      <figcaption>
+        <h3>BEFORE</h3>
+        <ul role="list">
+          <li>Video piatto</li><li>Nessun sottotitolo</li><li>Audio debole</li><li>Composizione non ottimizzata</li>
+        </ul>
+      </figcaption>
+    </figure>
+    <figure class="ba-panel ba-after" id="baAfter" aria-label="Dopo: contenuto editato">
+      <div class="ba-media ba-media-edit">
+        <video preload="metadata" muted playsinline aria-hidden="true">
+          <source src="short-form-content/assets/videos/sport-edited.mp4" type="video/mp4">
+        </video>
+        <div class="ba-fallback ba-fallback-edit" aria-hidden="true"><span>SHORT FORM EDIT</span></div>
+      </div>
+      <figcaption>
+        <h3>AFTER</h3>
+        <ul role="list">
+          <li>Hook visivo</li><li>Zoom dinamico</li><li>Sottotitoli animati</li><li>Color grading</li><li>Motion graphics</li><li>Sound design</li>
+        </ul>
+      </figcaption>
+    </figure>
+    <div class="ba-divider" id="baDivider" aria-hidden="true"><span>DRAG - SCROLL</span></div>
+  </div>
+</section>
+
+<!-- ============ 6. PACCHETTI ============ -->
+<section class="section pacchetti" id="pacchetti" aria-labelledby="pacchetti-title">
+  <p class="eyebrow reveal">Pacchetti &amp; prezzi</p>
+  <h2 id="pacchetti-title" class="reveal">Scegli il modulo giusto per te.</h2>
+  <p class="lead reveal">30 video al mese, sempre. Cambia solo quanto in alto vuoi volare.</p>
+  <div class="modules" id="modules"><!-- generato da app.js con i dati di data.js --></div>
+</section>
+
+<!-- ============ 7. CONTRATTI ============ -->
+<section class="section contratti" id="contratti" aria-labelledby="contratti-title">
+  <div class="contract-col">
+    <p class="eyebrow eyebrow-green reveal">Contratto semestrale - 6 mesi</p>
+    <h2 class="reveal">Risparmia il <span class="green-text">10%</span><br>con il semestrale.</h2>
+    <ul class="benefit-list" id="benefitSem" role="list"></ul>
+  </div>
+  <div class="contract-col">
+    <p class="eyebrow eyebrow-gold reveal">Contratto annuale - 12 mesi</p>
+    <h2 class="reveal">Risparmia il <span class="gold-text">20%</span><br>con l'annuale.</h2>
+    <ul class="benefit-list benefit-gold" id="benefitAnn" role="list"></ul>
+  </div>
+</section>
+
+<!-- ============ RISULTATI ============ -->
+<section class="section risultati" id="risultati" aria-labelledby="risultati-title">
+  <p class="eyebrow reveal">Cosa dicono i nostri clienti</p>
+  <h2 id="risultati-title" class="reveal">Risultati reali.<br>Storie vere.</h2>
+  <div class="metrics" id="metrics"></div>
+</section>
+
+<!-- ============ 8. CTA FINALE ============ -->
+<section class="section finale" id="contatti" aria-labelledby="finale-title">
+  <p class="eyebrow reveal">Inizia oggi</p>
+  <h2 id="finale-title" class="finale-title reveal">Pronto a far esplodere<br>i tuoi contenuti?</h2>
+  <p class="lead reveal">Scegli il tuo pacchetto e inizia entro 24 ore.</p>
+  <div class="hero-cta reveal">
+    <a class="btn btn-primary" href="#demo">Contattaci ora</a>
+    <a class="btn btn-ghost" href="#pacchetti">Vedi i pacchetti</a>
+    <a class="btn btn-green" href="#demo">Demo gratuita</a>
+  </div>
+  <dl class="contact-grid reveal" id="contactGrid"></dl>
+
+  <!-- FORM DEMO -->
+  <form class="demo-form reveal" id="demo" novalidate aria-labelledby="demo-title">
+    <h3 id="demo-title">Richiedi una demo gratuita</h3>
+    <p class="form-note">Nessun impegno. Ti rispondiamo entro 24 ore.</p>
+    <div class="form-row">
+      <div class="field">
+        <label for="f-nome">Nome *</label>
+        <input id="f-nome" name="nome" type="text" autocomplete="name" required>
+        <p class="field-error" id="err-nome" role="alert" hidden>Inserisci il tuo nome.</p>
+      </div>
+      <div class="field">
+        <label for="f-email">Email *</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required>
+        <p class="field-error" id="err-email" role="alert" hidden>Inserisci un'email valida.</p>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="f-profilo">Profilo o team</label>
+        <input id="f-profilo" name="profilo" type="text" placeholder="@tuapagina / nome team">
+      </div>
+      <div class="field">
+        <label for="f-piattaforma">Piattaforma principale</label>
+        <select id="f-piattaforma" name="piattaforma">
+          <option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>Facebook</option><option>Altro</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="f-pacchetto">Pacchetto di interesse</label>
+      <select id="f-pacchetto" name="pacchetto">
+        <option>Non lo so ancora</option><option>Basic</option><option>Medium</option><option>Premium</option><option>Ultimate</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="f-msg">Messaggio</label>
+      <textarea id="f-msg" name="messaggio" rows="4" placeholder="Raccontaci il tuo progetto..."></textarea>
+    </div>
+    <div class="field field-check">
+      <input id="f-privacy" name="privacy" type="checkbox" required>
+      <label for="f-privacy">Acconsento al trattamento dei dati per essere ricontattato. *</label>
+      <p class="field-error" id="err-privacy" role="alert" hidden>Devi accettare il consenso privacy.</p>
+    </div>
+    <button class="btn btn-primary btn-full" type="submit">Invia richiesta -></button>
+    <p class="form-success" id="formSuccess" role="status" hidden>
+      Richiesta registrata (simulazione). <strong>Nota:</strong> nessun dato e stato realmente inviato - collega il form a Formspree, Netlify Forms o alla tua API per attivarlo.
+    </p>
+  </form>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>SHORT FORM CONTENT - Vertex Group</p>
+</footer>
+
 </body>
 </html>

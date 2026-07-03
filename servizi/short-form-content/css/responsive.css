@@ -1,0 +1,75 @@
+/* ============================================================
+   Short Form Content - responsive.css
+============================================================ */
+
+/* ---------- TABLET ---------- */
+@media (max-width: 1080px){
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .modules{grid-template-columns:repeat(2,1fr)}
+  .contratti{grid-template-columns:1fr;gap:80px}
+  .contact-grid{grid-template-columns:repeat(2,1fr)}
+  .soluzione{min-height:190vh}
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 720px){
+  .section{padding:110px 6vw 80px}
+
+  /* navbar → menu a schermo intero */
+  .nav-burger{display:block}
+  .nav-menu{
+    position:fixed;inset:0;background:rgba(5,8,16,.97);
+    flex-direction:column;justify-content:center;gap:10px;
+    transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav-menu.open{transform:none}
+  .nav-link{font-size:18px}
+  .nav-cta{margin:14px 0 0}
+
+  .hero-title{font-size:clamp(54px,17vw,96px)}
+  .hero-cta .btn{width:100%;text-align:center}
+
+  .warning-panel{flex-direction:column}
+  .retention-line{width:100%}
+
+  .services-grid{grid-template-columns:1fr;margin-top:48vh}
+  .soluzione{min-height:150vh}
+
+  .steps{grid-template-columns:1fr}
+  .processo{min-height:auto}
+
+  .ba-stage{height:60vh}
+  .ba-panel figcaption{padding:16px 18px}
+  .ba-panel ul{gap:4px 12px}
+  .ba-panel li{font-size:11px}
+
+  /* pacchetti → scorrimento orizzontale con snap */
+  .modules{
+    display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+    gap:16px;padding-bottom:18px;margin-left:-6vw;margin-right:-6vw;
+    padding-left:6vw;padding-right:6vw;
+    -webkit-overflow-scrolling:touch;
+  }
+  .modules::-webkit-scrollbar{height:4px}
+  .modules::-webkit-scrollbar-thumb{background:var(--blue)}
+  .module{
+    flex:0 0 82vw;scroll-snap-align:center;
+    transform:none !important; /* niente tilt 3D su touch */
+  }
+  .pacchetti{min-height:auto}
+
+  .metrics{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .demo-form{padding:28px 20px}
+
+  .scroll-indicator{display:none}
+  .bg-grid{background-size:48px 48px}
+}
+
+/* ---------- schermi molto piccoli ---------- */
+@media (max-width: 380px){
+  .module{flex-basis:88vw}
+  .hero-title{font-size:52px}
+}
