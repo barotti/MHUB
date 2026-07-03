@@ -167,6 +167,7 @@ h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
 .plan{
   --pc:var(--blue);
   border:1px solid var(--line);background:var(--surface);padding:34px 28px;position:relative;
+  display:flex;flex-direction:column;
   transform-style:preserve-3d;transition:border-color .4s;overflow:hidden;
 }
 .plan::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--pc)}
@@ -193,7 +194,7 @@ h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
 .cta-btn{
   display:block;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;
   font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
-  padding:16px;background:var(--pc);color:#04060a;position:relative;overflow:hidden;transition:.3s;
+  margin-top:auto;padding:16px;background:var(--pc);color:#04060a;position:relative;overflow:hidden;transition:.3s;
 }
 .cta-btn:hover{filter:brightness(1.15);box-shadow:0 0 30px color-mix(in srgb,var(--pc) 45%,transparent)}
 .plan.medium{--pc:var(--cyan)}
@@ -490,21 +491,21 @@ footer{border-top:1px solid var(--line);padding:26px 6vw;text-align:center;font-
   <div class="quotes">
     <div class="quote rv">
       <div class="stars">★★★★★</div>
-      <p>"Ho triplicato le views sui Reels. Il turnaround è incredibile: in 24 ore ho il video pronto."</p>
-      <div class="who"><div class="av" style="border-color:var(--blue)">M</div><div><b>Marco R.</b><span>Creator Calcio — 280K follower</span></div></div>
-      <div class="kpi">+<span class="count" data-to="340">0</span>%<small>Engagement</small></div>
+      <p>"Da quando gestiscono la pagina, il calendario editoriale è costante e i contenuti portano molte più interazioni."</p>
+      <div class="who"><div class="av" style="border-color:var(--blue)">M</div><div><b>Marco R.</b><span>Brand sportivo locale</span></div></div>
+      <div class="kpi">+<span class="count" data-to="340">0</span>%<small>Interazioni</small></div>
     </div>
     <div class="quote rv" style="border-top-color:var(--cyan)">
       <div class="stars">★★★★★</div>
-      <p>"Abbiamo aumentato l'engagement del 340% in 3 mesi. I loro template sono di un livello che non avevamo mai visto."</p>
+      <p>"Hanno trasformato i nostri profili: copy più chiari, community seguita e report mensili davvero utili."</p>
       <div class="who"><div class="av" style="border-color:var(--cyan)">T</div><div><b>Team Futsal Milano</b><span>Club Sportivo Semiprofessionistico</span></div></div>
-      <div class="kpi" style="color:var(--cyan)"><span class="count" data-to="50">0</span>+<small>Clienti attivi</small></div>
+      <div class="kpi" style="color:var(--cyan)"><span class="count" data-to="50">0</span>+<small>Pagine gestite</small></div>
     </div>
     <div class="quote rv" style="border-top-color:var(--amber)">
       <div class="stars">★★★★★</div>
-      <p>"Professionalità assoluta. Consegnano sempre in tempo, i contenuti sono al livello di una produzione televisiva."</p>
-      <div class="who"><div class="av" style="border-color:var(--amber)">S</div><div><b>Sport Media Sud</b><span>Broadcaster Regionale</span></div></div>
-      <div class="kpi" style="color:var(--amber)"><span class="count" data-to="2500">0</span>+<small>Video consegnati</small></div>
+      <p>"Professionalità assoluta nella gestione quotidiana: risposte ai messaggi, pubblicazioni puntuali e profilo sempre curato."</p>
+      <div class="who"><div class="av" style="border-color:var(--amber)">S</div><div><b>Sport Media Sud</b><span>Media locale</span></div></div>
+      <div class="kpi" style="color:var(--amber)"><span class="count" data-to="2500">0</span>+<small>Contenuti gestiti</small></div>
     </div>
   </div>
 </section>
