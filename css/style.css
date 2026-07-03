@@ -749,6 +749,8 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   min-height: 114px;
   display: grid;
+  text-decoration: none;
+  color: inherit;
   grid-template-columns: 72px 1fr 52px;
   align-items: center;
   gap: 0;
