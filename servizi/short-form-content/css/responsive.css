@@ -34,7 +34,7 @@
   .retention-line{width:100%}
 
   .services-grid{grid-template-columns:1fr;margin-top:48vh}
-  .soluzione{min-height:150vh}
+  .soluzione{min-height:auto}
 
   .steps{grid-template-columns:1fr}
   .processo{min-height:auto}
