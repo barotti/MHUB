@@ -1,20 +1,604 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Graphic Design - M3STUDIO</title>
-  <meta name="description" content="Grafiche social, visual promozionali, compositing e materiali coordinati per comunicazione digitale." />
-  <link rel="stylesheet" href="../css/style.css?v=20260607-services" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERTEX Studios — Graphic Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;1,800;1,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#050810;
+  --surface:#0a0e18;
+  --surface-2:#0e1322;
+  --line:rgba(255,255,255,.08);
+  --txt:#f2f5fa;
+  --muted:#8a93a6;
+  --blue:#086cff;
+  --cyan:#09d7f5;
+  --amber:#ffb800;
+  --magenta:#ff2e70;
+  --green:#00d88a;
+  --violet:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;
+}
+@media (hover:none){body{cursor:auto}}
+::selection{background:var(--magenta);color:#fff}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:var(--cyan)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(139,92,246,.6);transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hovering{width:64px;height:64px;border-color:var(--magenta);background:rgba(255,46,112,.08)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- PROGRESS ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:999;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--blue),var(--cyan),var(--magenta),var(--amber))}
+
+/* ---------- CANVAS SWATCHES ---------- */
+#swatches{position:fixed;inset:0;z-index:0;opacity:.5}
+
+/* ---------- LAYOUT ---------- */
+main{position:relative;z-index:1}
+section{padding:110px 6vw;position:relative;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:14px;margin-bottom:28px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--blue)}
+h1,h2{
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:.95;
+}
+h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
+.lead{color:var(--muted);max-width:640px;font-size:17px;line-height:1.7}
+
+/* glitch */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-txt);position:absolute;inset:0;opacity:0}
+.glitch::before{color:var(--cyan);z-index:-1}
+.glitch::after{color:var(--magenta);z-index:-2}
+.glitch.on::before{animation:g1 .6s steps(2) both}
+.glitch.on::after{animation:g2 .6s steps(2) both}
+@keyframes g1{0%{opacity:.9;transform:translate(-6px,2px);clip-path:inset(10% 0 55% 0)}40%{clip-path:inset(60% 0 5% 0)}100%{opacity:0;transform:none}}
+@keyframes g2{0%{opacity:.9;transform:translate(6px,-2px);clip-path:inset(50% 0 20% 0)}40%{clip-path:inset(5% 0 70% 0)}100%{opacity:0;transform:none}}
+
+/* chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.chip{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;border:1px solid var(--line);padding:7px 14px;color:var(--muted);transition:.3s;background:rgba(255,255,255,.02)}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 18px rgba(9,215,245,.25)}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(48px,10vw,150px)}
+.hero .accent{background:linear-gradient(90deg,var(--blue),var(--cyan),var(--magenta));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--muted);font-size:clamp(15px,1.6vw,19px);margin-top:26px;max-width:580px;line-height:1.7}
+.hero-stats{display:flex;margin-top:60px;border:1px solid var(--line);width:fit-content;flex-wrap:wrap;backdrop-filter:blur(6px);background:rgba(10,14,24,.5)}
+.hstat{padding:22px 34px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat b{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;display:block}
+.hstat b .u{font-size:14px;color:var(--blue);font-style:normal;margin-left:4px}
+.hstat span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-hint{position:absolute;bottom:34px;left:6vw;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted);display:flex;align-items:center;gap:12px}
+.scroll-hint::after{content:"";width:1px;height:44px;background:linear-gradient(var(--cyan),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* palette bar hero */
+.palette{display:flex;gap:0;margin-top:40px;width:fit-content;border:1px solid var(--line)}
+.sw{width:52px;height:52px;position:relative;transition:transform .3s}
+.sw:hover{transform:translateY(-8px)}
+.sw span{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:'Space Mono',monospace;font-size:8px;color:rgba(0,0,0,.55);font-weight:700}
+
+/* ---------- MARQUEE ---------- */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:18px 0;background:var(--surface)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:mq 26s linear infinite}
+.marquee span{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;font-size:20px;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:56px}
+.marquee i{font-style:normal;color:var(--blue)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- CARDS ---------- */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.p-card{border:1px solid var(--line);background:var(--surface);padding:32px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.p-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--magenta);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.p-card:hover{transform:translateY(-6px);border-color:rgba(255,46,112,.4)}
+.p-card:hover::before{transform:scaleX(1)}
+.p-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:19px;margin-bottom:12px}
+.p-card p{color:var(--muted);font-size:14.5px;line-height:1.7}
+.p-card .n{font-family:'Space Mono',monospace;color:rgba(255,46,112,.55);font-size:11px;letter-spacing:.3em;display:block;margin-bottom:16px}
+
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.s-card{border:1px solid var(--line);background:var(--surface);padding:30px;position:relative;overflow:hidden;transition:.4s}
+.s-card::after{content:"";position:absolute;inset:-60%;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(9,215,245,.16),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+.s-card:hover::after{opacity:1}
+.s-card:hover{border-color:rgba(9,215,245,.45)}
+.s-card .ico{width:42px;height:42px;border:1px solid var(--blue);display:grid;place-items:center;margin-bottom:20px;color:var(--cyan);font-size:18px;background:rgba(8,108,255,.08)}
+.s-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:17px;margin-bottom:10px}
+.s-card p{color:var(--muted);font-size:14px;line-height:1.7}
+
+/* ---------- PROCESSO ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:60px;position:relative}
+.step{border:1px solid var(--line);background:var(--surface);padding:34px 26px;position:relative}
+.step .num{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:56px;color:transparent;-webkit-text-stroke:1px rgba(8,108,255,.7);line-height:1}
+.step h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:18px;margin:18px 0 12px}
+.step p{color:var(--muted);font-size:14px;line-height:1.7}
+.step::after{content:"→";position:absolute;top:50%;right:-16px;color:var(--blue);font-size:20px;z-index:2}
+.step:last-child::after{display:none}
+@media(max-width:1050px){.step::after{display:none}}
+.pline{position:absolute;top:-30px;left:0;width:100%;height:2px;background:rgba(255,255,255,.05)}
+.pline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.turnaround{margin-top:40px;border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--surface);padding:18px 24px;font-size:15px;max-width:640px}
+.turnaround b{color:var(--amber)}
+
+/* ---------- PRICING ---------- */
+.billing{display:flex;border:1px solid var(--line);width:fit-content;margin:44px auto 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.billing button{background:none;border:none;color:var(--muted);padding:14px 22px;cursor:none;font:inherit;border-right:1px solid var(--line);transition:.3s}
+.billing button:last-child{border-right:none}
+.billing button.active{color:#fff;background:var(--blue)}
+.billing button b{color:var(--green);margin-left:6px}
+.billing button.active b{color:#bfffe6}
+
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin-top:52px;perspective:1400px}
+.plan{--pc:var(--blue);border:1px solid var(--line);background:var(--surface);padding:34px 28px;position:relative;transform-style:preserve-3d;transition:border-color .4s;overflow:hidden}
+.plan::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--pc)}
+.plan .holo{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,rgba(9,215,245,.1) 50%,rgba(255,255,255,.07) 55%,transparent 70%);background-size:250% 250%}
+.plan:hover .holo{opacity:1}
+.plan:hover{border-color:var(--pc)}
+.plan .tag{position:absolute;top:16px;right:16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;padding:5px 10px;background:var(--pc);color:#04060a;font-weight:700}
+.plan h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;font-size:24px;color:var(--pc)}
+.price{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:52px;margin:18px 0 4px;display:flex;align-items:baseline;gap:6px}
+.price .cur{font-size:26px;color:var(--pc)}
+.price .per{font-size:14px;color:var(--muted);font-weight:500;font-style:normal;font-family:'Space Grotesk',sans-serif}
+.pergraphic{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:22px}
+.pergraphic b{color:var(--pc)}
+.vbox{border:1px solid var(--pc);text-align:center;padding:12px;font-weight:700;margin-bottom:24px;background:color-mix(in srgb,var(--pc) 8%,transparent);font-size:15px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px}
+.plan li{color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan .ideal{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--pc);margin-bottom:10px}
+.plan .ideal-list{color:var(--muted);font-size:12.5px;line-height:1.8;margin-bottom:26px}
+.cta-btn{display:block;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:16px;background:var(--pc);color:#04060a;transition:.3s}
+.cta-btn:hover{filter:brightness(1.15);box-shadow:0 0 30px color-mix(in srgb,var(--pc) 45%,transparent)}
+.plan.medium{--pc:var(--cyan)}
+.plan.premium{--pc:var(--amber)}
+.plan.ultimate{--pc:var(--magenta)}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{overflow-x:auto;margin-top:52px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--surface)}
+th,td{padding:15px 18px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+td:first-child,th:first-child{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+th{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:14px}
+th small{display:block;font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+th.c-basic{color:var(--blue)}th.c-medium{color:var(--cyan)}th.c-premium{color:var(--amber)}th.c-ultimate{color:var(--magenta)}
+td .ok{color:var(--green);font-weight:700}
+td .no{color:rgba(255,255,255,.18)}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(8,108,255,.06)}
+
+/* ---------- SAVING ---------- */
+.save-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.save-card{border:1px solid var(--line);background:var(--surface);padding:30px;border-left:3px solid var(--green);transition:.35s}
+.save-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.save-card.gold{border-left-color:var(--amber)}
+.save-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:16px;margin-bottom:10px;color:var(--green)}
+.save-card.gold h3{color:var(--amber)}
+.save-card p{color:var(--muted);font-size:13.5px;line-height:1.7}
+
+/* ---------- TESTIMONIALS ---------- */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:52px}
+.quote{border:1px solid var(--line);background:var(--surface);padding:30px;border-top:3px solid var(--blue);display:flex;flex-direction:column;gap:22px}
+.quote p{color:var(--txt);font-size:15px;line-height:1.75;font-style:italic}
+.quote .who{display:flex;align-items:center;gap:14px}
+.quote .av{width:44px;height:44px;border-radius:50%;border:2px solid var(--blue);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:900;font-style:italic}
+.quote .who b{display:block;font-size:14px}
+.quote .who span{font-size:12px;color:var(--muted)}
+.quote .kpi{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;color:var(--blue);margin-top:auto}
+.quote .kpi small{font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--muted);display:block;text-transform:uppercase}
+.stars{color:var(--amber);letter-spacing:3px}
+
+/* ---------- FINALE ---------- */
+.final{text-align:center;padding:150px 6vw;border-bottom:none}
+.final h2{font-size:clamp(38px,6.5vw,86px)}
+.final .lead{margin:22px auto 46px}
+.btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.big-btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:20px 40px;text-decoration:none;transition:.35s;display:inline-block}
+.big-btn.b1{background:var(--blue);color:#fff}
+.big-btn.b2{border:1px solid var(--line);color:var(--txt)}
+.big-btn.b3{background:var(--green);color:#04140c}
+.big-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(8,108,255,.3)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:960px;margin:70px auto 0}
+.contact{border:1px solid var(--line);padding:20px;text-align:left;background:var(--surface);transition:.3s}
+.contact:hover{border-color:var(--blue)}
+.contact span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:8px}
+.contact b{font-size:14px;font-weight:500}
+footer{border-top:1px solid var(--line);padding:26px 6vw;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+.rv{opacity:0;transform:translateY(36px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  body{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+}
+@media(max-width:640px){
+  section{padding:80px 6vw}
+  .hstat{padding:16px 20px}
+  .hstat b{font-size:24px}
+}
+</style>
 </head>
 <body>
-  <main class="service-page">
-    <a class="service-back" href="../index.html#services">Torna ai servizi</a>
-    <p class="eyebrow">M3STUDIO / Servizio 04</p>
-    <h1>Graphic Design</h1>
-    <p>Visual social, layout, compositing e asset promozionali costruiti per rendere ogni uscita riconoscibile e curata.</p>
-    <div class="service-page-tags"><span>Photoshop</span><span>Illustrator</span><span>Figma</span></div>
-    <a class="service-page-cta" href="../index.html#contact">Richiedi un progetto</a>
-  </main>
+
+<div class="progress" id="progress"></div>
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+<canvas id="swatches"></canvas>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">04 — Creative Agency for Brand Graphics</div>
+  <h1><span class="glitch scramble" data-txt="GRAPHIC">GRAPHIC</span><br>
+      <span class="glitch scramble accent" data-txt="DESIGN">DESIGN</span></h1>
+  <p class="hero-sub">Grafiche professionali per Social, Brand e Campagne — pensate per far fermare lo scroll. Post, caroselli, cover, banner e materiali marketing: tutto coerente, tutto riconoscibile.</p>
+  <div class="chips">
+    <span class="chip">Photoshop</span><span class="chip">Illustrator</span><span class="chip">Figma</span>
+    <span class="chip">Caroselli</span><span class="chip">Storie & Cover</span><span class="chip">Banner & Print</span>
+  </div>
+  <div class="palette">
+    <div class="sw" style="background:#086cff"><span>086CFF</span></div>
+    <div class="sw" style="background:#09d7f5"><span>09D7F5</span></div>
+    <div class="sw" style="background:#ffb800"><span>FFB800</span></div>
+    <div class="sw" style="background:#ff2e70"><span>FF2E70</span></div>
+    <div class="sw" style="background:#00d88a"><span>00D88A</span></div>
+    <div class="sw" style="background:#f2f5fa"><span>F2F5FA</span></div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b><span class="count" data-to="48">0</span><span class="u">H</span></b><span>Turnaround garantito</span></div>
+    <div class="hstat"><b>HD</b><span>Qualità stampa & web</span></div>
+    <div class="hstat"><b><span class="count" data-to="100">0</span><span class="u">%</span></b><span>Ottimizzato per social</span></div>
+    <div class="hstat"><b><span class="count" data-to="2500">0</span><span class="u">+</span></b><span>Grafiche consegnate</span></div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-track">
+  <span>Post &amp; caroselli <i>◆</i> Storie &amp; cover <i>◆</i> Banner &amp; print <i>◆</i> Brand identity coerente <i>◆</i> Materiali campagne ADV <i>◆</i></span>
+  <span>Post &amp; caroselli <i>◆</i> Storie &amp; cover <i>◆</i> Banner &amp; print <i>◆</i> Brand identity coerente <i>◆</i> Materiali campagne ADV <i>◆</i></span>
+</div></div>
+
+<!-- CHI SIAMO / PROBLEMA -->
+<section>
+  <div class="eyebrow" style="color:var(--magenta)">Il problema</div>
+  <h2 class="rv">Il tuo contenuto<br>ti sta frenando.</h2>
+  <div class="grid-2">
+    <div class="p-card rv"><span class="n">ERR_01</span><h3>Mancanza di tempo</h3><p>Creare grafiche in-house richiede ore, sottraendo risorse al core business e alla strategia.</p></div>
+    <div class="p-card rv"><span class="n">ERR_02</span><h3>Basso engagement</h3><p>Grafiche generiche o disomogenee non catturano l'attenzione: il pubblico scorre oltre.</p></div>
+    <div class="p-card rv"><span class="n">ERR_03</span><h3>Brand incoerente</h3><p>Colori, font e stili diversi da post a post indeboliscono la riconoscibilità del marchio.</p></div>
+    <div class="p-card rv"><span class="n">ERR_04</span><h3>Pubblicazione incostante</h3><p>Senza un flusso regolare di grafiche il calendario editoriale si blocca e la crescita rallenta.</p></div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section>
+  <div class="eyebrow">La soluzione</div>
+  <h2 class="rv">VERTEX Studio<br>disegna per te.</h2>
+  <p class="lead rv">Ci racconti il tuo brand. Al resto pensiamo noi: layout, palette, tipografia e composizione.</p>
+  <div class="grid-3">
+    <div class="s-card rv"><div class="ico">⚡</div><h3>Design ultra-rapido</h3><p>Layout puliti e d'impatto, pronti per pubblicare in tempi record.</p></div>
+    <div class="s-card rv"><div class="ico">▦</div><h3>Formati multi-piattaforma</h3><p>Ogni grafica adattata a feed, storie, cover e stampa senza perdere qualità.</p></div>
+    <div class="s-card rv"><div class="ico">↗</div><h3>Engagement Maximizer</h3><p>Composizioni e gerarchie visive costruite per massimizzare interazioni e click.</p></div>
+    <div class="s-card rv"><div class="ico">✎</div><h3>Brand Identity</h3><p>Palette, font e stile grafico coerenti su ogni singolo contenuto pubblicato.</p></div>
+    <div class="s-card rv"><div class="ico">▤</div><h3>Piano editoriale</h3><p>Consegne cadenzate per mantenere alta la frequenza di pubblicazione.</p></div>
+    <div class="s-card rv"><div class="ico">✦</div><h3>Qualità garantita</h3><p>Revisioni incluse. Non siamo soddisfatti finché non lo sei tu.</p></div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section>
+  <div class="eyebrow">Come funziona</div>
+  <h2 class="rv">Il nostro processo in 4 step.</h2>
+  <div class="steps">
+    <div class="pline"><i id="pline"></i></div>
+    <div class="step rv"><div class="num">01</div><h3>Brief creativo</h3><p>Ci racconti il tuo brand: obiettivi, tono di voce, riferimenti visivi. Qualsiasi formato accettato.</p></div>
+    <div class="step rv"><div class="num">02</div><h3>Design</h3><p>Il nostro team lavora su layout, palette, tipografia e composizione.</p></div>
+    <div class="step rv"><div class="num">03</div><h3>Ottimizzazione</h3><p>Ogni grafica viene adattata al formato e alla piattaforma target.</p></div>
+    <div class="step rv"><div class="num">04</div><h3>Consegna</h3><p>Ricevi i file pronti per la pubblicazione. Feedback e revisioni inclusi.</p></div>
+  </div>
+  <p class="turnaround rv">⚡ Turnaround garantito in <b>24–48 ore</b> dalla ricezione del brief.</p>
+</section>
+
+<!-- PREZZI -->
+<section id="prezzi">
+  <div class="eyebrow">Pacchetti & prezzi</div>
+  <h2 class="rv" style="text-align:center">Scegli il piano giusto per te.</h2>
+  <div class="billing rv" id="billing">
+    <button class="active" data-mode="0">Mensile</button>
+    <button data-mode="1">Semestrale <b>−10%</b></button>
+    <button data-mode="2">Annuale <b>−20%</b></button>
+  </div>
+  <div class="plans">
+    <div class="plan rv" data-tilt><div class="holo"></div>
+      <h3>Basic</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="150">150</span><span class="per">/mese</span></div>
+      <div class="pergraphic">solo <b class="pg" data-base="150">€5</b> per grafica</div>
+      <div class="vbox">30 grafiche / mese</div>
+      <ul><li>Post per Instagram &amp; LinkedIn</li><li>Layout standard</li><li>Colori brand</li><li>2 revisioni incluse</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Piccole attività e freelance · Brand agli inizi · Profili social in avvio</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan medium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Più scelto</span>
+      <h3>Medium</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="210">210</span><span class="per">/mese</span></div>
+      <div class="pergraphic">solo <b class="pg" data-base="210">€7</b> per grafica</div>
+      <div class="vbox">30 grafiche / mese</div>
+      <ul><li>Tutto del piano Basic</li><li>Caroselli animati</li><li>Template personalizzati</li><li>Priorità media in coda</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Pagine in crescita · Team semiprofessionali · Agenzie e consulenti</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan premium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Consigliato</span>
+      <h3>Premium</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="300">300</span><span class="per">/mese</span></div>
+      <div class="pergraphic">solo <b class="pg" data-base="300">€10</b> per grafica</div>
+      <div class="vbox">30 grafiche / mese</div>
+      <ul><li>Tutto del piano Medium</li><li>Illustrazioni custom</li><li>Kit brand identity base</li><li>Recap settimanali inclusi</li><li>Alta priorità in coda</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Brand con 50K+ follower · Aziende in scale-up · Broadcaster &amp; media sport</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan ultimate rv" data-tilt><div class="holo"></div>
+      <h3>Ultimate</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="600">600</span><span class="per">/mese</span></div>
+      <div class="pergraphic">solo <b class="pg" data-base="600">€20</b> per grafica</div>
+      <div class="vbox">30 grafiche / mese</div>
+      <ul><li>Tutto del piano Premium</li><li>Sistema brand identity completo</li><li>Materiali per campagne ADV</li><li>Short-form + long-form</li><li>Strategia editoriale mensile</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Aziende strutturate · Franchise e reti multi-sede · Agenzie media &amp; sponsor</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONFRONTO -->
+<section>
+  <div class="eyebrow">Confronto pacchetti</div>
+  <h2 class="rv">Ogni feature, a confronto.</h2>
+  <div class="tbl-wrap rv">
+  <table>
+    <thead><tr>
+      <th>Feature</th>
+      <th class="c-basic">Basic<small>€150/mese</small></th>
+      <th class="c-medium">Medium<small>€210/mese</small></th>
+      <th class="c-premium">Premium<small>€300/mese</small></th>
+      <th class="c-ultimate">Ultimate<small>€600/mese</small></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Grafiche / mese</td><td>30</td><td>30</td><td>30</td><td>30</td></tr>
+      <tr><td>Formati multi-piattaforma</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Caroselli animati</td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Illustrazioni custom</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Materiali ADV</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Strategia editoriale</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Account manager dedicato</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Turnaround garantito</td><td>48H</td><td>48H</td><td>24H</td><td>24H</td></tr>
+      <tr><td>Revisioni</td><td>2</td><td>3</td><td>Illimitate</td><td>Illimitate</td></tr>
+      <tr><td>Costo per grafica</td><td>€5,00</td><td>€7,00</td><td>€10,00</td><td>€20,00</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- RISPARMIO -->
+<section>
+  <div class="eyebrow" style="color:var(--green)">Contratti lunghi = più valore</div>
+  <h2 class="rv">Risparmia il <span style="color:var(--green)">10%</span> col semestrale,<br>il <span style="color:var(--amber)">20%</span> con l'annuale.</h2>
+  <div class="save-grid">
+    <div class="save-card rv"><h3>−10% su ogni pacchetto</h3><p>Sconto diretto applicato al totale mensile per tutta la durata del contratto semestrale.</p></div>
+    <div class="save-card rv"><h3>Priorità in coda garantita</h3><p>I clienti semestrali hanno accesso prioritario al team creativo in tutti i periodi.</p></div>
+    <div class="save-card rv"><h3>Onboarding brand gratuito</h3><p>Sessione completa di brand setup: colori, loghi, font, stile grafico personalizzato.</p></div>
+    <div class="save-card rv"><h3>Pack template esclusivo</h3><p>5 template grafici personalizzati con la tua identità visiva inclusi nel piano.</p></div>
+    <div class="save-card gold rv"><h3>Annuale: brand identity completa</h3><p>20 template, 3 set di stili, intro/outro animati personalizzati al 100%, account manager dedicato per 12 mesi.</p></div>
+    <div class="save-card gold rv"><h3>Annuale: report settimanale + bonus</h3><p>Dashboard analitica aggiornata ogni settimana e 5 grafiche extra ogni mese incluse senza costo aggiuntivo.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section>
+  <div class="eyebrow">Cosa dicono i nostri clienti</div>
+  <h2 class="rv">Risultati reali.<br>Storie vere.</h2>
+  <div class="quotes">
+    <div class="quote rv">
+      <div class="stars">★★★★★</div>
+      <p>"Abbiamo finalmente un brand coerente su tutti i canali. Le grafiche arrivano puntuali e di alta qualità."</p>
+      <div class="who"><div class="av" style="border-color:var(--blue)">M</div><div><b>Marco R.</b><span>Creator Calcio – 280K follower</span></div></div>
+      <div class="kpi">+<span class="count" data-to="340">0</span>%<small>Engagement</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--cyan)">
+      <div class="stars">★★★★★</div>
+      <p>"Professionalità assoluta. Consegnano sempre in tempo e ogni grafica rispecchia perfettamente il nostro brand."</p>
+      <div class="who"><div class="av" style="border-color:var(--cyan)">T</div><div><b>Team Futsal Milano</b><span>Club Sportivo Semiprofessionistico</span></div></div>
+      <div class="kpi" style="color:var(--cyan)"><span class="count" data-to="50">0</span>+<small>Clienti soddisfatti</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--amber)">
+      <div class="stars">★★★★★</div>
+      <p>"L'engagement sui nostri post è aumentato del 280% in tre mesi. Il livello grafico è quello di un'agenzia top."</p>
+      <div class="who"><div class="av" style="border-color:var(--amber)">S</div><div><b>Sport Media Sud</b><span>Broadcaster Regionale</span></div></div>
+      <div class="kpi" style="color:var(--amber)"><span class="count" data-to="2500">0</span>+<small>Grafiche consegnate</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final" id="contatti">
+  <div class="eyebrow" style="justify-content:center">Inizia oggi</div>
+  <h2 class="rv">Pronto a far <span style="background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">esplodere</span><br>il tuo brand?</h2>
+  <p class="lead rv">Scegli il tuo pacchetto e inizia entro 24 ore.</p>
+  <div class="btn-row rv">
+    <a href="mailto:info@vert-ex.it" class="big-btn b1" data-mag>Contattaci ora</a>
+    <a href="#prezzi" class="big-btn b2" data-mag>Vedi i pacchetti</a>
+    <a href="mailto:info@vert-ex.it?subject=Demo%20gratuita" class="big-btn b3" data-mag>Demo gratuita</a>
+  </div>
+  <div class="contacts">
+    <div class="contact rv"><span>Email</span><b>info@vert-ex.it</b></div>
+    <div class="contact rv"><span>Instagram</span><b>@vertex.italia</b></div>
+    <div class="contact rv"><span>WhatsApp</span><b>+39 000 000 0000</b></div>
+    <div class="contact rv"><span>Web</span><b>www.vert-ex.it</b></div>
+  </div>
+</section>
+
+</main>
+<footer>Vertex Studios · Graphic Design Professionale · vert-ex.it</footer>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- floating color swatches background ---------- */
+const cv=document.getElementById('swatches'),cx=cv.getContext('2d');
+let W,H,chips=[];
+const COLORS=['#086cff','#09d7f5','#ffb800','#ff2e70','#00d88a','#8b5cf6'];
+function resize(){
+  W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const n=Math.min(26,Math.floor(W*H/60000));
+  chips=Array.from({length:n},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    s:24+Math.random()*46,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    rot:Math.random()*Math.PI,vr:(Math.random()-.5)*.004,
+    c:COLORS[Math.floor(Math.random()*COLORS.length)],
+    a:.06+Math.random()*.10
+  }));
+}
+resize();addEventListener('resize',resize);
+let mx=-999,my=-999;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+function tick(){
+  cx.clearRect(0,0,W,H);
+  for(const c of chips){
+    const dx=mx-c.x,dy=my-c.y,d=Math.hypot(dx,dy);
+    if(d<160){c.vx-=dx/d*.03;c.vy-=dy/d*.03}
+    c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;
+    c.vx*=.99;c.vy*=.99;
+    if(c.x<-60)c.x=W+60;if(c.x>W+60)c.x=-60;
+    if(c.y<-60)c.y=H+60;if(c.y>H+60)c.y=-60;
+    cx.save();cx.translate(c.x,c.y);cx.rotate(c.rot);
+    cx.globalAlpha=c.a;cx.fillStyle=c.c;
+    cx.fillRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.globalAlpha=c.a*2.2;cx.strokeStyle=c.c;cx.lineWidth=1;
+    cx.strokeRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.restore();
+  }
+  requestAnimationFrame(tick);
+}
+if(!reduced)tick();
+
+/* ---------- cursor ---------- */
+const dot=document.getElementById('cdot'),ring=document.getElementById('cring');
+let rx=0,ry=0,tx=0,ty=0;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;dot.style.transform=`translate(${tx}px,${ty}px) translate(-50%,-50%)`});
+(function loop(){rx+=(tx-rx)*.16;ry+=(ty-ry)*.16;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.chip,.plan,.sw,.s-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+});
+
+/* ---------- GSAP ---------- */
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#progress',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+document.querySelectorAll('.rv').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+gsap.to('#pline',{width:'100%',ease:'none',scrollTrigger:{trigger:'.steps',start:'top 80%',end:'bottom 60%',scrub:.5}});
+
+/* ---------- scramble + glitch ---------- */
+const CHARS='!<>-_\\/[]{}—=+*^?#01';
+function scramble(el){
+  const final=el.dataset.txt;let frame=0;const total=Math.max(24,final.length*2.2);
+  (function step(){
+    let out='';
+    for(let i=0;i<final.length;i++){
+      const reveal=frame/total*final.length*1.4;
+      out+=i<reveal?final[i]:(final[i]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+    }
+    el.textContent=out;
+    if(frame++<total)requestAnimationFrame(step);
+    else{el.textContent=final;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)}
+  })();
+}
+if(!reduced){
+  document.querySelectorAll('.scramble').forEach((el,i)=>setTimeout(()=>scramble(el),300+i*450));
+  setInterval(()=>{const els=document.querySelectorAll('.glitch');const el=els[Math.floor(Math.random()*els.length)];el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)},6000);
+}
+
+/* ---------- counters ---------- */
+document.querySelectorAll('.count').forEach(el=>{
+  const to=parseFloat(el.dataset.to);
+  ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>{
+    const o={v:0};
+    gsap.to(o,{v:to,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+  }});
+});
+
+/* ---------- billing toggle ---------- */
+const disc=[1,.9,.8],per=['/mese','/mese · sem.','/mese · ann.'];
+let mode=0;
+document.getElementById('billing').addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return;
+  mode=+btn.dataset.mode;
+  document.querySelectorAll('#billing button').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.pnum').forEach(el=>{
+    const target=Math.round(el.dataset.base*disc[mode]);
+    const o={v:parseFloat(el.textContent.replace(/\./g,''))||0};
+    gsap.to(o,{v:target,duration:.7,ease:'power3.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+    gsap.fromTo(el,{scale:1.12,color:'#09d7f5'},{scale:1,color:'#f2f5fa',duration:.7});
+  });
+  document.querySelectorAll('.pg').forEach(el=>{
+    const v=el.dataset.base*disc[mode]/30;
+    el.textContent='€'+(Math.round(v*10)/10).toLocaleString('it-IT');
+  });
+  document.querySelectorAll('.price .per').forEach(el=>el.textContent=per[mode]);
+});
+
+/* ---------- tilt + holo + magnetic ---------- */
+if(!reduced){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      gsap.to(card,{rotateY:(px-.5)*10,rotateX:(.5-py)*10,duration:.4,transformPerspective:900});
+      const holo=card.querySelector('.holo');if(holo)holo.style.backgroundPosition=(px*180)+'% 0';
+    });
+    card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.6,ease:'elastic.out(1,.5)'}));
+  });
+  document.querySelectorAll('.s-card').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+  document.querySelectorAll('[data-mag]').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.28,y:(e.clientY-r.top-r.height/2)*.28,duration:.35});
+    });
+    b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.55,ease:'elastic.out(1,.4)'}));
+  });
+}
+</script>
 </body>
 </html>
