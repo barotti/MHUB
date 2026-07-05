@@ -1,20 +1,586 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Strategia Algoritmica - M3STUDIO</title>
-  <meta name="description" content="Analisi trend, strategia contenuti, SEO e ottimizzazione algoritmica per contenuti digitali." />
-  <link rel="stylesheet" href="../css/style.css?v=20260607-services" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERTEX Studios — Strategia Algoritmica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;1,800;1,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#050810;
+  --surface:#0a0e18;
+  --surface-2:#0e1322;
+  --line:rgba(255,255,255,.08);
+  --txt:#f2f5fa;
+  --muted:#8a93a6;
+  --blue:#086cff;
+  --cyan:#09d7f5;
+  --amber:#ffb800;
+  --magenta:#ff2e70;
+  --green:#00d88a;
+  --violet:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;
+}
+@media (hover:none){body{cursor:auto}}
+::selection{background:var(--green);color:#050810}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:var(--green)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(0,216,138,.6);transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hovering{width:64px;height:64px;border-color:var(--cyan);background:rgba(0,216,138,.08)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- PROGRESS ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:999;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--green),var(--cyan),var(--blue),var(--amber))}
+
+/* ---------- CANVAS ---------- */
+#swatches{position:fixed;inset:0;z-index:0;opacity:.5}
+
+/* ---------- LAYOUT ---------- */
+main{position:relative;z-index:1}
+section{padding:110px 6vw;position:relative;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:14px;margin-bottom:28px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--green)}
+h1,h2{
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:.95;
+}
+h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
+.lead{color:var(--muted);max-width:640px;font-size:17px;line-height:1.7}
+
+/* glitch */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-txt);position:absolute;inset:0;opacity:0}
+.glitch::before{color:var(--green);z-index:-1}
+.glitch::after{color:var(--cyan);z-index:-2}
+.glitch.on::before{animation:g1 .6s steps(2) both}
+.glitch.on::after{animation:g2 .6s steps(2) both}
+@keyframes g1{0%{opacity:.9;transform:translate(-6px,2px);clip-path:inset(10% 0 55% 0)}40%{clip-path:inset(60% 0 5% 0)}100%{opacity:0;transform:none}}
+@keyframes g2{0%{opacity:.9;transform:translate(6px,-2px);clip-path:inset(50% 0 20% 0)}40%{clip-path:inset(5% 0 70% 0)}100%{opacity:0;transform:none}}
+
+/* chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.chip{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;border:1px solid var(--line);padding:7px 14px;color:var(--muted);transition:.3s;background:rgba(255,255,255,.02)}
+.chip:hover{border-color:var(--green);color:var(--green);box-shadow:0 0 18px rgba(0,216,138,.25)}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(48px,10vw,150px)}
+.hero .accent{background:linear-gradient(90deg,var(--green),var(--cyan),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--muted);font-size:clamp(15px,1.6vw,19px);margin-top:26px;max-width:580px;line-height:1.7}
+.hero-stats{display:flex;margin-top:60px;border:1px solid var(--line);width:fit-content;flex-wrap:wrap;backdrop-filter:blur(6px);background:rgba(10,14,24,.5)}
+.hstat{padding:22px 34px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat b{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;display:block}
+.hstat b .u{font-size:14px;color:var(--green);font-style:normal;margin-left:4px}
+.hstat span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-hint{position:absolute;bottom:34px;left:6vw;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted);display:flex;align-items:center;gap:12px}
+.scroll-hint::after{content:"";width:1px;height:44px;background:linear-gradient(var(--green),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- MARQUEE ---------- */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:18px 0;background:var(--surface)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:mq 26s linear infinite}
+.marquee span{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;font-size:20px;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:56px}
+.marquee i{font-style:normal;color:var(--green)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- CARDS ---------- */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.p-card{border:1px solid var(--line);background:var(--surface);padding:32px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.p-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--magenta);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.p-card:hover{transform:translateY(-6px);border-color:rgba(255,46,112,.4)}
+.p-card:hover::before{transform:scaleX(1)}
+.p-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:19px;margin-bottom:12px}
+.p-card p{color:var(--muted);font-size:14.5px;line-height:1.7}
+.p-card .n{font-family:'Space Mono',monospace;color:rgba(255,46,112,.55);font-size:11px;letter-spacing:.3em;display:block;margin-bottom:16px}
+
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.s-card{border:1px solid var(--line);background:var(--surface);padding:30px;position:relative;overflow:hidden;transition:.4s}
+.s-card::after{content:"";position:absolute;inset:-60%;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,216,138,.16),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+.s-card:hover::after{opacity:1}
+.s-card:hover{border-color:rgba(0,216,138,.45)}
+.s-card .ico{width:42px;height:42px;border:1px solid var(--green);display:grid;place-items:center;margin-bottom:20px;color:var(--green);font-size:18px;background:rgba(0,216,138,.08)}
+.s-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:17px;margin-bottom:10px}
+.s-card p{color:var(--muted);font-size:14px;line-height:1.7}
+
+/* ---------- PROCESSO ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:60px;position:relative}
+.step{border:1px solid var(--line);background:var(--surface);padding:34px 26px;position:relative}
+.step .num{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:56px;color:transparent;-webkit-text-stroke:1px rgba(0,216,138,.7);line-height:1}
+.step h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:18px;margin:18px 0 12px}
+.step p{color:var(--muted);font-size:14px;line-height:1.7}
+.step::after{content:"→";position:absolute;top:50%;right:-16px;color:var(--green);font-size:20px;z-index:2}
+.step:last-child::after{display:none}
+@media(max-width:1050px){.step::after{display:none}}
+.pline{position:absolute;top:-30px;left:0;width:100%;height:2px;background:rgba(255,255,255,.05)}
+.pline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan))}
+.turnaround{margin-top:40px;border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--surface);padding:18px 24px;font-size:15px;max-width:640px}
+.turnaround b{color:var(--amber)}
+
+/* ---------- PRICING ---------- */
+.billing{display:flex;border:1px solid var(--line);width:fit-content;margin:44px auto 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.billing button{background:none;border:none;color:var(--muted);padding:14px 22px;cursor:none;font:inherit;border-right:1px solid var(--line);transition:.3s}
+.billing button:last-child{border-right:none}
+.billing button.active{color:#050810;background:var(--green)}
+.billing button b{color:var(--cyan);margin-left:6px}
+.billing button.active b{color:#003d26}
+
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin-top:52px;perspective:1400px}
+.plan{--pc:var(--green);border:1px solid var(--line);background:var(--surface);padding:34px 28px;position:relative;transform-style:preserve-3d;transition:border-color .4s;overflow:hidden}
+.plan::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--pc)}
+.plan .holo{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,rgba(0,216,138,.1) 50%,rgba(255,255,255,.07) 55%,transparent 70%);background-size:250% 250%}
+.plan:hover .holo{opacity:1}
+.plan:hover{border-color:var(--pc)}
+.plan .tag{position:absolute;top:16px;right:16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;padding:5px 10px;background:var(--pc);color:#04060a;font-weight:700}
+.plan h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;font-size:24px;color:var(--pc)}
+.price{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:52px;margin:18px 0 4px;display:flex;align-items:baseline;gap:6px}
+.price .cur{font-size:26px;color:var(--pc)}
+.price .per{font-size:14px;color:var(--muted);font-weight:500;font-style:normal;font-family:'Space Grotesk',sans-serif}
+.peritem{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:22px}
+.peritem b{color:var(--pc)}
+.vbox{border:1px solid var(--pc);text-align:center;padding:12px;font-weight:700;margin-bottom:24px;background:color-mix(in srgb,var(--pc) 8%,transparent);font-size:15px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px}
+.plan li{color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan .ideal{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--pc);margin-bottom:10px}
+.plan .ideal-list{color:var(--muted);font-size:12.5px;line-height:1.8;margin-bottom:26px}
+.cta-btn{display:block;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:16px;background:var(--pc);color:#04060a;transition:.3s}
+.cta-btn:hover{filter:brightness(1.15);box-shadow:0 0 30px color-mix(in srgb,var(--pc) 45%,transparent)}
+.plan.medium{--pc:var(--cyan)}
+.plan.premium{--pc:var(--amber)}
+.plan.ultimate{--pc:var(--magenta)}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{overflow-x:auto;margin-top:52px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--surface)}
+th,td{padding:15px 18px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+td:first-child,th:first-child{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+th{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:14px}
+th small{display:block;font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+th.c-basic{color:var(--green)}th.c-medium{color:var(--cyan)}th.c-premium{color:var(--amber)}th.c-ultimate{color:var(--magenta)}
+td .ok{color:var(--green);font-weight:700}
+td .no{color:rgba(255,255,255,.18)}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(0,216,138,.06)}
+
+/* ---------- SAVING ---------- */
+.save-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.save-card{border:1px solid var(--line);background:var(--surface);padding:30px;border-left:3px solid var(--green);transition:.35s}
+.save-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.save-card.gold{border-left-color:var(--amber)}
+.save-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:16px;margin-bottom:10px;color:var(--green)}
+.save-card.gold h3{color:var(--amber)}
+.save-card p{color:var(--muted);font-size:13.5px;line-height:1.7}
+
+/* ---------- TESTIMONIALS ---------- */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:52px}
+.quote{border:1px solid var(--line);background:var(--surface);padding:30px;border-top:3px solid var(--green);display:flex;flex-direction:column;gap:22px}
+.quote p{color:var(--txt);font-size:15px;line-height:1.75;font-style:italic}
+.quote .who{display:flex;align-items:center;gap:14px}
+.quote .av{width:44px;height:44px;border-radius:50%;border:2px solid var(--green);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:900;font-style:italic}
+.quote .who b{display:block;font-size:14px}
+.quote .who span{font-size:12px;color:var(--muted)}
+.quote .kpi{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;color:var(--green);margin-top:auto}
+.quote .kpi small{font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--muted);display:block;text-transform:uppercase}
+.stars{color:var(--amber);letter-spacing:3px}
+
+/* ---------- FINALE ---------- */
+.final{text-align:center;padding:150px 6vw;border-bottom:none}
+.final h2{font-size:clamp(38px,6.5vw,86px)}
+.final .lead{margin:22px auto 46px}
+.btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.big-btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:20px 40px;text-decoration:none;transition:.35s;display:inline-block}
+.big-btn.b1{background:var(--blue);color:#fff}
+.big-btn.b2{border:1px solid var(--line);color:var(--txt)}
+.big-btn.b3{background:var(--green);color:#04140c}
+.big-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,216,138,.3)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:960px;margin:70px auto 0}
+.contact{border:1px solid var(--line);padding:20px;text-align:left;background:var(--surface);transition:.3s}
+.contact:hover{border-color:var(--green)}
+.contact span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:8px}
+.contact b{font-size:14px;font-weight:500}
+footer{border-top:1px solid var(--line);padding:26px 6vw;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+.rv{opacity:0;transform:translateY(36px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  body{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+}
+@media(max-width:640px){
+  section{padding:80px 6vw}
+  .hstat{padding:16px 20px}
+  .hstat b{font-size:24px}
+}
+</style>
 </head>
 <body>
-  <main class="service-page">
-    <a class="service-back" href="../index.html#services">Torna ai servizi</a>
-    <p class="eyebrow">M3STUDIO / Servizio 06</p>
-    <h1>Strategia Algoritmica</h1>
-    <p>Analisi dei trend, mappatura contenuti e ottimizzazione SEO/social per pubblicare nel formato giusto al momento giusto.</p>
-    <div class="service-page-tags"><span>AI Models</span><span>Trend Map</span><span>SEO</span></div>
-    <a class="service-page-cta" href="../index.html#contact">Richiedi un progetto</a>
-  </main>
+
+<div class="progress" id="progress"></div>
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+<canvas id="swatches"></canvas>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">06 — Crescita Organica basata sui Dati</div>
+  <h1><span class="glitch scramble" data-txt="STRATEGIA">STRATEGIA</span><br>
+      <span class="glitch scramble accent" data-txt="ALGORITMICA">ALGORITMICA</span></h1>
+  <p class="hero-sub">Non pubblichiamo a caso. Studiamo come funzionano gli algoritmi di TikTok, Instagram e YouTube, e costruiamo una strategia su misura per moltiplicare reach, engagement e follower reali.</p>
+  <div class="chips">
+    <span class="chip">TikTok Algorithm</span><span class="chip">IG Reels</span><span class="chip">YouTube SEO</span>
+    <span class="chip">Trend Scouting</span><span class="chip">A/B Testing</span><span class="chip">Analytics Pro</span>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b>+<span class="count" data-to="380">0</span><span class="u">%</span></b><span>Reach media clienti</span></div>
+    <div class="hstat"><b><span class="count" data-to="60">0</span><span class="u">+</span></b><span>Account gestiti</span></div>
+    <div class="hstat"><b><span class="count" data-to="200">0</span><span class="u">+</span></b><span>Viral post generati</span></div>
+    <div class="hstat"><b><span class="count" data-to="3">0</span><span class="u">X</span></b><span>Crescita media follower</span></div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-track">
+  <span>Analisi algoritmo <i>◆</i> Trend scouting <i>◆</i> Piano editoriale <i>◆</i> A/B testing <i>◆</i> Crescita organica <i>◆</i></span>
+  <span>Analisi algoritmo <i>◆</i> Trend scouting <i>◆</i> Piano editoriale <i>◆</i> A/B testing <i>◆</i> Crescita organica <i>◆</i></span>
+</div></div>
+
+<!-- PROBLEMA -->
+<section>
+  <div class="eyebrow" style="color:var(--magenta)">Il problema</div>
+  <h2 class="rv">Pubblichi tanto.<br>Cresci poco.</h2>
+  <div class="grid-2">
+    <div class="p-card rv"><span class="n">ERR_01</span><h3>Reach in caduta libera</h3><p>Gli algoritmi penalizzano i contenuti non ottimizzati. Senza la strategia giusta, ogni post raggiunge una frazione del tuo pubblico potenziale.</p></div>
+    <div class="p-card rv"><span class="n">ERR_02</span><h3>Timing sempre sbagliato</h3><p>Pubblicare fuori dalle finestre di distribuzione ottimale dimezza le impression organiche ancora prima del primo like.</p></div>
+    <div class="p-card rv"><span class="n">ERR_03</span><h3>Dati ignorati</h3><p>Senza un'analisi profonda degli analytics non si capisce cosa funziona davvero, e si replica a caso ciò che non converte.</p></div>
+    <div class="p-card rv"><span class="n">ERR_04</span><h3>Trend sempre mancati</h3><p>I trend durano ore, non giorni. Senza un sistema di scouting costante si arriva sempre tardi e fuori dal picco algoritmico.</p></div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section>
+  <div class="eyebrow">La soluzione</div>
+  <h2 class="rv">VERTEX Studios<br>parla la lingua degli algoritmi.</h2>
+  <p class="lead rv">Studiamo ogni piattaforma come un sistema: variabili, segnali di ranking, finestre di distribuzione. Costruiamo la strategia attorno ai dati reali del tuo account.</p>
+  <div class="grid-3">
+    <div class="s-card rv"><div class="ico">⟳</div><h3>Analisi algoritmica</h3><p>Studio approfondito di TikTok FYP, IG Reels e YouTube: segnali di ranking, hook, retention e distribuzione.</p></div>
+    <div class="s-card rv"><div class="ico">↗</div><h3>Trend Scouting</h3><p>Monitoraggio 24/7 dei trending topic, audio virali e formati emergenti prima che raggiungano il picco.</p></div>
+    <div class="s-card rv"><div class="ico">▦</div><h3>Piano editoriale data-driven</h3><p>Calendario costruito sui tuoi analytics: orari, frequenza, formati e topic ottimizzati per ogni piattaforma.</p></div>
+    <div class="s-card rv"><div class="ico">⚡</div><h3>A/B Testing continuo</h3><p>Testiamo hook, thumbnail, caption e call-to-action per trovare la formula che massimizza il CTR organico.</p></div>
+    <div class="s-card rv"><div class="ico">◈</div><h3>SEO social & hashtag</h3><p>Ricerca keyword e hashtag con il giusto bilanciamento tra volume e competizione su ogni piattaforma.</p></div>
+    <div class="s-card rv"><div class="ico">✦</div><h3>Report KPI mensile</h3><p>Dashboard con reach, engagement rate, crescita follower e ROI organico. Dati chiari, decisioni informate.</p></div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section>
+  <div class="eyebrow">Come funziona</div>
+  <h2 class="rv">Strategia in 4 step.</h2>
+  <div class="steps">
+    <div class="pline"><i id="pline"></i></div>
+    <div class="step rv"><div class="num">01</div><h3>Account Audit</h3><p>Analizziamo a fondo il tuo profilo: performance storiche, contenuti top, pubblico e gap algoritmici da colmare.</p></div>
+    <div class="step rv"><div class="num">02</div><h3>Strategia su misura</h3><p>Costruiamo un piano editoriale personalizzato: topic, formati, frequenza e timing ottimizzati per il tuo settore.</p></div>
+    <div class="step rv"><div class="num">03</div><h3>Implementazione & Test</h3><p>Mettiamo in campo la strategia e monitoriamo ogni variabile in tempo reale, aggiustando il tiro a ogni pubblicazione.</p></div>
+    <div class="step rv"><div class="num">04</div><h3>Ottimizzazione continua</h3><p>Report mensile, revisione della strategia e aggiornamento costante in base ai cambiamenti dell'algoritmo.</p></div>
+  </div>
+  <p class="turnaround rv">⚡ Primi risultati visibili in <b>2–4 settimane</b>. Crescita costante garantita dal secondo mese.</p>
+</section>
+
+<!-- PREZZI -->
+<section id="prezzi">
+  <div class="eyebrow">Pacchetti & prezzi</div>
+  <h2 class="rv" style="text-align:center">Scegli il piano giusto per te.</h2>
+  <div class="billing rv" id="billing">
+    <button class="active" data-mode="0">Mensile</button>
+    <button data-mode="1">Semestrale <b>−10%</b></button>
+    <button data-mode="2">Annuale <b>−20%</b></button>
+  </div>
+  <div class="plans">
+    <div class="plan rv" data-tilt><div class="holo"></div>
+      <h3>Boost</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="199">199</span><span class="per">/mese</span></div>
+      <div class="peritem"><b>Audit + piano</b> mensile su 1 piattaforma</div>
+      <div class="vbox">1 Piattaforma</div>
+      <ul><li>Audit account iniziale</li><li>Piano editoriale mensile</li><li>Scouting trend settimanale</li><li>SEO hashtag ottimizzato</li><li>Report mensile KPI</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Creator in avvio · Piccole imprese · Profili con meno di 10K follower</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan medium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Più scelto</span>
+      <h3>Growth</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="399">399</span><span class="per">/mese</span></div>
+      <div class="peritem"><b>Strategia full</b> su 2 piattaforme</div>
+      <div class="vbox">2 Piattaforme</div>
+      <ul><li>Tutto del piano Boost</li><li>Strategia cross-platform</li><li>A/B testing hook & caption</li><li>Analisi competitor mensile</li><li>Ottimizzazione orari e frequenza</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Creator in crescita · Brand con 10–100K follower · Agenzie content</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan premium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Consigliato</span>
+      <h3>Scale</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="699">699</span><span class="per">/mese</span></div>
+      <div class="peritem"><b>Strategia avanzata</b> multi-piattaforma</div>
+      <div class="vbox">3 Piattaforme</div>
+      <ul><li>Tutto del piano Growth</li><li>Strategia virale dedicata</li><li>Trend alert in tempo reale</li><li>Consulenza settimanale 1:1</li><li>Account manager dedicato</li><li>A/B testing avanzato</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Brand con 100K+ follower · Media company · Creator professionisti</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan ultimate rv" data-tilt><div class="holo"></div>
+      <h3>Dominate</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="1200">1.200</span><span class="per">/mese</span></div>
+      <div class="peritem"><b>Team dedicato</b> di crescita aggressiva</div>
+      <div class="vbox">Piattaforme illimitate</div>
+      <ul><li>Tutto del piano Scale</li><li>Growth hacking su ogni canale</li><li>Strategia influencer outreach</li><li>Paid + organic integrati</li><li>War room mensile con il team</li><li>Obiettivi follower garantiti</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Major brand · Agenzie media · Atleti e personalità pubbliche · Label musicali</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONFRONTO -->
+<section>
+  <div class="eyebrow">Confronto pacchetti</div>
+  <h2 class="rv">Ogni feature, a confronto.</h2>
+  <div class="tbl-wrap rv">
+  <table>
+    <thead><tr>
+      <th>Feature</th>
+      <th class="c-basic">Boost<small>€199/mese</small></th>
+      <th class="c-medium">Growth<small>€399/mese</small></th>
+      <th class="c-premium">Scale<small>€699/mese</small></th>
+      <th class="c-ultimate">Dominate<small>€1.200/mese</small></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Piattaforme gestite</td><td>1</td><td>2</td><td>3</td><td>Illimitate</td></tr>
+      <tr><td>Audit account</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Piano editoriale</td><td>Base</td><td>Avanzato</td><td>Avanzato</td><td>Data-driven</td></tr>
+      <tr><td>A/B Testing</td><td><span class="no">—</span></td><td>Base</td><td>Avanzato</td><td>Full</td></tr>
+      <tr><td>Trend alert real-time</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Strategia influencer</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Consulenza 1:1</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td>Settimanale</td><td>Illimitata</td></tr>
+      <tr><td>Account manager</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Report KPI</td><td>Mensile</td><td>Mensile</td><td>Bi-settimanale</td><td>Settimanale</td></tr>
+      <tr><td>Crescita follower</td><td>Organica</td><td>Organica+</td><td>Garantita</td><td>Aggressiva</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- RISPARMIO -->
+<section>
+  <div class="eyebrow" style="color:var(--green)">Contratti lunghi = più valore</div>
+  <h2 class="rv">Risparmia il <span style="color:var(--green)">10%</span> col semestrale,<br>il <span style="color:var(--amber)">20%</span> con l'annuale.</h2>
+  <div class="save-grid">
+    <div class="save-card rv"><h3>−10% su ogni pacchetto</h3><p>Sconto diretto applicato al totale mensile per tutta la durata del contratto semestrale.</p></div>
+    <div class="save-card rv"><h3>Audit avanzato incluso</h3><p>I clienti semestrali ricevono un audit approfondito con analisi della concorrenza e benchmark di settore.</p></div>
+    <div class="save-card rv"><h3>Strategia di lancio gratuita</h3><p>Piano di lancio per nuovi contenuti o nuove piattaforme incluso senza costi aggiuntivi per il primo mese.</p></div>
+    <div class="save-card rv"><h3>Accesso al trend database</h3><p>Database proprietario di trend storici e stagionalità per pianificare i contenuti con mesi di anticipo.</p></div>
+    <div class="save-card gold rv"><h3>Annuale: growth roadmap 12 mesi</h3><p>Strategia di crescita annuale con obiettivi trimestrali, KPI definiti e piano di ottimizzazione progressiva.</p></div>
+    <div class="save-card gold rv"><h3>Annuale: report executive + bonus</h3><p>Dashboard executive con proiezioni di crescita e 2 piattaforme extra monitorate gratuitamente ogni mese.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section>
+  <div class="eyebrow">Cosa dicono i nostri clienti</div>
+  <h2 class="rv">Risultati reali.<br>Storie vere.</h2>
+  <div class="quotes">
+    <div class="quote rv">
+      <div class="stars">★★★★★</div>
+      <p>"In 3 mesi siamo passati da 8K a 52K follower su TikTok senza investire un euro in paid. Solo strategia organica pura."</p>
+      <div class="who"><div class="av" style="border-color:var(--green)">F</div><div><b>Francesco M.</b><span>Creator Fitness — TikTok</span></div></div>
+      <div class="kpi">+<span class="count" data-to="550">0</span>%<small>Crescita follower in 90 gg</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--cyan)">
+      <div class="stars">★★★★★</div>
+      <p>"Avevamo engagement bassissimo nonostante un buon numero di follower. Con la strategia algoritmica l'ER è triplicato in 6 settimane."</p>
+      <div class="who"><div class="av" style="border-color:var(--cyan)">V</div><div><b>Valentina C.</b><span>Brand Manager — E-commerce</span></div></div>
+      <div class="kpi" style="color:var(--cyan)">3X<small>Engagement Rate</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--amber)">
+      <div class="stars">★★★★★</div>
+      <p>"Tre viral su quattro negli ultimi 2 mesi. Il trend scouting di VERTEX ci ha sempre messi avanti al momento giusto."</p>
+      <div class="who"><div class="av" style="border-color:var(--amber)">G</div><div><b>Gianmarco P.</b><span>Creator Sport — Instagram & YouTube</span></div></div>
+      <div class="kpi" style="color:var(--amber)"><span class="count" data-to="200">0</span>+<small>Viral post generati</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final" id="contatti">
+  <div class="eyebrow" style="justify-content:center">Inizia oggi</div>
+  <h2 class="rv">Pronto a <span style="background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">dominare</span><br>l'algoritmo?</h2>
+  <p class="lead rv">Ricevi un audit gratuito del tuo profilo entro 24 ore dalla richiesta.</p>
+  <div class="btn-row rv">
+    <a href="mailto:info@vert-ex.it" class="big-btn b1" data-mag>Contattaci ora</a>
+    <a href="#prezzi" class="big-btn b2" data-mag>Vedi i pacchetti</a>
+    <a href="mailto:info@vert-ex.it?subject=Audit%20gratuito%20account" class="big-btn b3" data-mag>Audit gratuito</a>
+  </div>
+  <div class="contacts">
+    <div class="contact rv"><span>Email</span><b>info@vert-ex.it</b></div>
+    <div class="contact rv"><span>Instagram</span><b>@vertex.italia</b></div>
+    <div class="contact rv"><span>WhatsApp</span><b>+39 000 000 0000</b></div>
+    <div class="contact rv"><span>Web</span><b>www.vert-ex.it</b></div>
+  </div>
+</section>
+
+</main>
+<footer>Vertex Studios · Strategia Algoritmica · vert-ex.it</footer>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- floating background ---------- */
+const cv=document.getElementById('swatches'),cx=cv.getContext('2d');
+let W,H,chips=[];
+const COLORS=['#00d88a','#09d7f5','#086cff','#ffb800','#ff2e70','#8b5cf6'];
+function resize(){
+  W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const n=Math.min(26,Math.floor(W*H/60000));
+  chips=Array.from({length:n},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    s:24+Math.random()*46,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    rot:Math.random()*Math.PI,vr:(Math.random()-.5)*.004,
+    c:COLORS[Math.floor(Math.random()*COLORS.length)],
+    a:.06+Math.random()*.10
+  }));
+}
+resize();addEventListener('resize',resize);
+let mx=-999,my=-999;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+function tick(){
+  cx.clearRect(0,0,W,H);
+  for(const c of chips){
+    const dx=mx-c.x,dy=my-c.y,d=Math.hypot(dx,dy);
+    if(d<160){c.vx-=dx/d*.03;c.vy-=dy/d*.03}
+    c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;
+    c.vx*=.99;c.vy*=.99;
+    if(c.x<-60)c.x=W+60;if(c.x>W+60)c.x=-60;
+    if(c.y<-60)c.y=H+60;if(c.y>H+60)c.y=-60;
+    cx.save();cx.translate(c.x,c.y);cx.rotate(c.rot);
+    cx.globalAlpha=c.a;cx.fillStyle=c.c;
+    cx.fillRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.globalAlpha=c.a*2.2;cx.strokeStyle=c.c;cx.lineWidth=1;
+    cx.strokeRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.restore();
+  }
+  requestAnimationFrame(tick);
+}
+if(!reduced)tick();
+
+/* ---------- cursor ---------- */
+const dot=document.getElementById('cdot'),ring=document.getElementById('cring');
+let rx=0,ry=0,tx=0,ty=0;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;dot.style.transform=`translate(${tx}px,${ty}px) translate(-50%,-50%)`});
+(function loop(){rx+=(tx-rx)*.16;ry+=(ty-ry)*.16;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.chip,.plan,.s-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+});
+
+/* ---------- GSAP ---------- */
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#progress',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+document.querySelectorAll('.rv').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+gsap.to('#pline',{width:'100%',ease:'none',scrollTrigger:{trigger:'.steps',start:'top 80%',end:'bottom 60%',scrub:.5}});
+
+/* ---------- scramble + glitch ---------- */
+const CHARS='!<>-_\\/[]{}—=+*^?#01';
+function scramble(el){
+  const final=el.dataset.txt;let frame=0;const total=Math.max(24,final.length*2.2);
+  (function step(){
+    let out='';
+    for(let i=0;i<final.length;i++){
+      const reveal=frame/total*final.length*1.4;
+      out+=i<reveal?final[i]:(final[i]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+    }
+    el.textContent=out;
+    if(frame++<total)requestAnimationFrame(step);
+    else{el.textContent=final;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)}
+  })();
+}
+if(!reduced){
+  document.querySelectorAll('.scramble').forEach((el,i)=>setTimeout(()=>scramble(el),300+i*450));
+  setInterval(()=>{const els=document.querySelectorAll('.glitch');const el=els[Math.floor(Math.random()*els.length)];el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)},6000);
+}
+
+/* ---------- counters ---------- */
+document.querySelectorAll('.count').forEach(el=>{
+  const to=parseFloat(el.dataset.to);
+  ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>{
+    const o={v:0};
+    gsap.to(o,{v:to,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+  }});
+});
+
+/* ---------- billing toggle ---------- */
+const disc=[1,.9,.8],per=['/mese','/mese · sem.','/mese · ann.'];
+let mode=0;
+document.getElementById('billing').addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return;
+  mode=+btn.dataset.mode;
+  document.querySelectorAll('#billing button').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.pnum').forEach(el=>{
+    const target=Math.round(el.dataset.base*disc[mode]);
+    const o={v:parseFloat(el.textContent.replace(/\./g,'').replace(',','.'))||0};
+    gsap.to(o,{v:target,duration:.7,ease:'power3.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+    gsap.fromTo(el,{scale:1.12,color:'#09d7f5'},{scale:1,color:'#f2f5fa',duration:.7});
+  });
+  document.querySelectorAll('.price .per').forEach(el=>el.textContent=per[mode]);
+});
+
+/* ---------- tilt + holo + magnetic ---------- */
+if(!reduced){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      gsap.to(card,{rotateY:(px-.5)*10,rotateX:(.5-py)*10,duration:.4,transformPerspective:900});
+      const holo=card.querySelector('.holo');if(holo)holo.style.backgroundPosition=(px*180)+'% 0';
+    });
+    card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.6,ease:'elastic.out(1,.5)'}));
+  });
+  document.querySelectorAll('.s-card').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+  document.querySelectorAll('[data-mag]').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.28,y:(e.clientY-r.top-r.height/2)*.28,duration:.35});
+    });
+    b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.55,ease:'elastic.out(1,.4)'}));
+  });
+}
+</script>
 </body>
 </html>

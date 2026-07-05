@@ -1,20 +1,601 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brand Identity - M3STUDIO</title>
-  <meta name="description" content="Logo, sistemi visivi, brand guide, palette e direzione creativa per identita digitali riconoscibili." />
-  <link rel="stylesheet" href="../css/style.css?v=20260607-services" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VERTEX Studios — Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;1,800;1,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --bg:#050810;
+  --surface:#0a0e18;
+  --surface-2:#0e1322;
+  --line:rgba(255,255,255,.08);
+  --txt:#f2f5fa;
+  --muted:#8a93a6;
+  --blue:#086cff;
+  --cyan:#09d7f5;
+  --amber:#ffb800;
+  --magenta:#ff2e70;
+  --green:#00d88a;
+  --violet:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;
+}
+@media (hover:none){body{cursor:auto}}
+::selection{background:var(--amber);color:#050810}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-dot{width:6px;height:6px;background:var(--amber)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,184,0,.6);transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hovering{width:64px;height:64px;border-color:var(--magenta);background:rgba(255,184,0,.08)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- PROGRESS ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:999;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--amber),var(--magenta),var(--violet),var(--cyan))}
+
+/* ---------- CANVAS ---------- */
+#swatches{position:fixed;inset:0;z-index:0;opacity:.5}
+
+/* ---------- LAYOUT ---------- */
+main{position:relative;z-index:1}
+section{padding:110px 6vw;position:relative;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:14px;margin-bottom:28px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--amber)}
+h1,h2{
+  font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:.95;
+}
+h2{font-size:clamp(34px,5.4vw,72px);margin-bottom:22px}
+.lead{color:var(--muted);max-width:640px;font-size:17px;line-height:1.7}
+
+/* glitch */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-txt);position:absolute;inset:0;opacity:0}
+.glitch::before{color:var(--amber);z-index:-1}
+.glitch::after{color:var(--magenta);z-index:-2}
+.glitch.on::before{animation:g1 .6s steps(2) both}
+.glitch.on::after{animation:g2 .6s steps(2) both}
+@keyframes g1{0%{opacity:.9;transform:translate(-6px,2px);clip-path:inset(10% 0 55% 0)}40%{clip-path:inset(60% 0 5% 0)}100%{opacity:0;transform:none}}
+@keyframes g2{0%{opacity:.9;transform:translate(6px,-2px);clip-path:inset(50% 0 20% 0)}40%{clip-path:inset(5% 0 70% 0)}100%{opacity:0;transform:none}}
+
+/* chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.chip{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;border:1px solid var(--line);padding:7px 14px;color:var(--muted);transition:.3s;background:rgba(255,255,255,.02)}
+.chip:hover{border-color:var(--amber);color:var(--amber);box-shadow:0 0 18px rgba(255,184,0,.25)}
+
+/* palette brand bar */
+.palette{display:flex;gap:0;margin-top:40px;width:fit-content;border:1px solid var(--line)}
+.sw{width:52px;height:52px;position:relative;transition:transform .3s}
+.sw:hover{transform:translateY(-8px)}
+.sw span{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:'Space Mono',monospace;font-size:8px;color:rgba(0,0,0,.55);font-weight:700}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(48px,10vw,150px)}
+.hero .accent{background:linear-gradient(90deg,var(--amber),var(--magenta),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{color:var(--muted);font-size:clamp(15px,1.6vw,19px);margin-top:26px;max-width:580px;line-height:1.7}
+.hero-stats{display:flex;margin-top:60px;border:1px solid var(--line);width:fit-content;flex-wrap:wrap;backdrop-filter:blur(6px);background:rgba(10,14,24,.5)}
+.hstat{padding:22px 34px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat b{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;display:block}
+.hstat b .u{font-size:14px;color:var(--amber);font-style:normal;margin-left:4px}
+.hstat span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-hint{position:absolute;bottom:34px;left:6vw;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--muted);display:flex;align-items:center;gap:12px}
+.scroll-hint::after{content:"";width:1px;height:44px;background:linear-gradient(var(--amber),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- MARQUEE ---------- */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);padding:18px 0;background:var(--surface)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:mq 26s linear infinite}
+.marquee span{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;font-size:20px;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:56px}
+.marquee i{font-style:normal;color:var(--amber)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- CARDS ---------- */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.p-card{border:1px solid var(--line);background:var(--surface);padding:32px;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.p-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--magenta);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.p-card:hover{transform:translateY(-6px);border-color:rgba(255,46,112,.4)}
+.p-card:hover::before{transform:scaleX(1)}
+.p-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:19px;margin-bottom:12px}
+.p-card p{color:var(--muted);font-size:14.5px;line-height:1.7}
+.p-card .n{font-family:'Space Mono',monospace;color:rgba(255,46,112,.55);font-size:11px;letter-spacing:.3em;display:block;margin-bottom:16px}
+
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.s-card{border:1px solid var(--line);background:var(--surface);padding:30px;position:relative;overflow:hidden;transition:.4s}
+.s-card::after{content:"";position:absolute;inset:-60%;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,184,0,.16),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+.s-card:hover::after{opacity:1}
+.s-card:hover{border-color:rgba(255,184,0,.45)}
+.s-card .ico{width:42px;height:42px;border:1px solid var(--amber);display:grid;place-items:center;margin-bottom:20px;color:var(--amber);font-size:18px;background:rgba(255,184,0,.08)}
+.s-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:17px;margin-bottom:10px}
+.s-card p{color:var(--muted);font-size:14px;line-height:1.7}
+
+/* ---------- PROCESSO ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:60px;position:relative}
+.step{border:1px solid var(--line);background:var(--surface);padding:34px 26px;position:relative}
+.step .num{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:56px;color:transparent;-webkit-text-stroke:1px rgba(255,184,0,.7);line-height:1}
+.step h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:18px;margin:18px 0 12px}
+.step p{color:var(--muted);font-size:14px;line-height:1.7}
+.step::after{content:"→";position:absolute;top:50%;right:-16px;color:var(--amber);font-size:20px;z-index:2}
+.step:last-child::after{display:none}
+@media(max-width:1050px){.step::after{display:none}}
+.pline{position:absolute;top:-30px;left:0;width:100%;height:2px;background:rgba(255,255,255,.05)}
+.pline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--magenta))}
+.turnaround{margin-top:40px;border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--surface);padding:18px 24px;font-size:15px;max-width:640px}
+.turnaround b{color:var(--amber)}
+
+/* ---------- PRICING ---------- */
+.billing{display:flex;border:1px solid var(--line);width:fit-content;margin:44px auto 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.billing button{background:none;border:none;color:var(--muted);padding:14px 22px;cursor:none;font:inherit;border-right:1px solid var(--line);transition:.3s}
+.billing button:last-child{border-right:none}
+.billing button.active{color:#050810;background:var(--amber)}
+.billing button b{color:var(--green);margin-left:6px}
+.billing button.active b{color:#3d2d00}
+
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin-top:52px;perspective:1400px}
+.plan{--pc:var(--amber);border:1px solid var(--line);background:var(--surface);padding:34px 28px;position:relative;transform-style:preserve-3d;transition:border-color .4s;overflow:hidden}
+.plan::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--pc)}
+.plan .holo{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,rgba(255,184,0,.1) 50%,rgba(255,255,255,.07) 55%,transparent 70%);background-size:250% 250%}
+.plan:hover .holo{opacity:1}
+.plan:hover{border-color:var(--pc)}
+.plan .tag{position:absolute;top:16px;right:16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;padding:5px 10px;background:var(--pc);color:#04060a;font-weight:700}
+.plan h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;font-size:24px;color:var(--pc)}
+.price{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:52px;margin:18px 0 4px;display:flex;align-items:baseline;gap:6px}
+.price .cur{font-size:26px;color:var(--pc)}
+.price .per{font-size:14px;color:var(--muted);font-weight:500;font-style:normal;font-family:'Space Grotesk',sans-serif}
+.peritem{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:22px}
+.peritem b{color:var(--pc)}
+.vbox{border:1px solid var(--pc);text-align:center;padding:12px;font-weight:700;margin-bottom:24px;background:color-mix(in srgb,var(--pc) 8%,transparent);font-size:15px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px}
+.plan li{color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.plan li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan .ideal{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--pc);margin-bottom:10px}
+.plan .ideal-list{color:var(--muted);font-size:12.5px;line-height:1.8;margin-bottom:26px}
+.cta-btn{display:block;text-align:center;text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:16px;background:var(--pc);color:#04060a;transition:.3s}
+.cta-btn:hover{filter:brightness(1.15);box-shadow:0 0 30px color-mix(in srgb,var(--pc) 45%,transparent)}
+.plan.medium{--pc:var(--cyan)}
+.plan.premium{--pc:var(--violet)}
+.plan.ultimate{--pc:var(--magenta)}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{overflow-x:auto;margin-top:52px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:760px;background:var(--surface)}
+th,td{padding:15px 18px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+td:first-child,th:first-child{text-align:left;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+th{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:14px}
+th small{display:block;font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
+th.c-basic{color:var(--amber)}th.c-medium{color:var(--cyan)}th.c-premium{color:var(--violet)}th.c-ultimate{color:var(--magenta)}
+td .ok{color:var(--green);font-weight:700}
+td .no{color:rgba(255,255,255,.18)}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:rgba(255,184,0,.06)}
+
+/* ---------- SAVING ---------- */
+.save-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+.save-card{border:1px solid var(--line);background:var(--surface);padding:30px;border-left:3px solid var(--green);transition:.35s}
+.save-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.save-card.gold{border-left-color:var(--amber)}
+.save-card h3{font-family:'Archivo',sans-serif;font-style:italic;font-weight:800;text-transform:uppercase;font-size:16px;margin-bottom:10px;color:var(--green)}
+.save-card.gold h3{color:var(--amber)}
+.save-card p{color:var(--muted);font-size:13.5px;line-height:1.7}
+
+/* ---------- TESTIMONIALS ---------- */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:52px}
+.quote{border:1px solid var(--line);background:var(--surface);padding:30px;border-top:3px solid var(--amber);display:flex;flex-direction:column;gap:22px}
+.quote p{color:var(--txt);font-size:15px;line-height:1.75;font-style:italic}
+.quote .who{display:flex;align-items:center;gap:14px}
+.quote .av{width:44px;height:44px;border-radius:50%;border:2px solid var(--amber);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:900;font-style:italic}
+.quote .who b{display:block;font-size:14px}
+.quote .who span{font-size:12px;color:var(--muted)}
+.quote .kpi{font-family:'Archivo',sans-serif;font-style:italic;font-weight:900;font-size:34px;color:var(--amber);margin-top:auto}
+.quote .kpi small{font-family:'Space Mono',monospace;font-style:normal;font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--muted);display:block;text-transform:uppercase}
+.stars{color:var(--amber);letter-spacing:3px}
+
+/* ---------- FINALE ---------- */
+.final{text-align:center;padding:150px 6vw;border-bottom:none}
+.final h2{font-size:clamp(38px,6.5vw,86px)}
+.final .lead{margin:22px auto 46px}
+.btn-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.big-btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:20px 40px;text-decoration:none;transition:.35s;display:inline-block}
+.big-btn.b1{background:var(--amber);color:#050810}
+.big-btn.b2{border:1px solid var(--line);color:var(--txt)}
+.big-btn.b3{background:var(--green);color:#04140c}
+.big-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(255,184,0,.3)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:960px;margin:70px auto 0}
+.contact{border:1px solid var(--line);padding:20px;text-align:left;background:var(--surface);transition:.3s}
+.contact:hover{border-color:var(--amber)}
+.contact span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:8px}
+.contact b{font-size:14px;font-weight:500}
+footer{border-top:1px solid var(--line);padding:26px 6vw;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+.rv{opacity:0;transform:translateY(36px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  body{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+}
+@media(max-width:640px){
+  section{padding:80px 6vw}
+  .hstat{padding:16px 20px}
+  .hstat b{font-size:24px}
+}
+</style>
 </head>
 <body>
-  <main class="service-page">
-    <a class="service-back" href="../index.html#services">Torna ai servizi</a>
-    <p class="eyebrow">M3STUDIO / Servizio 08</p>
-    <h1>Brand Identity</h1>
-    <p>Logo, sistema visivo, palette, typography e brand guide per costruire una presenza coerente e immediatamente riconoscibile.</p>
-    <div class="service-page-tags"><span>Logo Design</span><span>Brand System</span><span>Guidelines</span></div>
-    <a class="service-page-cta" href="../index.html#contact">Richiedi un progetto</a>
-  </main>
+
+<div class="progress" id="progress"></div>
+<div class="cursor-dot" id="cdot"></div>
+<div class="cursor-ring" id="cring"></div>
+<canvas id="swatches"></canvas>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">08 — Identità Visiva Professionale</div>
+  <h1><span class="glitch scramble" data-txt="BRAND">BRAND</span><br>
+      <span class="glitch scramble accent" data-txt="IDENTITY">IDENTITY</span></h1>
+  <p class="hero-sub">Logo, sistema visivo, palette, tipografia e brand guidelines per costruire un'identità riconoscibile in zero secondi. Dal concept al manuale completo: il tuo brand, finalmente coerente ovunque.</p>
+  <div class="chips">
+    <span class="chip">Logo Design</span><span class="chip">Figma</span><span class="chip">Illustrator</span>
+    <span class="chip">Brand Guidelines</span><span class="chip">Typography</span><span class="chip">Color System</span>
+  </div>
+  <div class="palette">
+    <div class="sw" style="background:#ffb800"><span>FFB800</span></div>
+    <div class="sw" style="background:#ff2e70"><span>FF2E70</span></div>
+    <div class="sw" style="background:#8b5cf6"><span>8B5CF6</span></div>
+    <div class="sw" style="background:#09d7f5"><span>09D7F5</span></div>
+    <div class="sw" style="background:#086cff"><span>086CFF</span></div>
+    <div class="sw" style="background:#f2f5fa"><span>F2F5FA</span></div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><b><span class="count" data-to="180">0</span><span class="u">+</span></b><span>Brand creati</span></div>
+    <div class="hstat"><b>48<span class="u">H</span></b><span>Concept iniziale</span></div>
+    <div class="hstat"><b><span class="count" data-to="100">0</span><span class="u">%</span></b><span>File sorgente inclusi</span></div>
+    <div class="hstat"><b><span class="count" data-to="8">0</span><span class="u">+</span></b><span>Anni di esperienza</span></div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-track">
+  <span>Logo design <i>◆</i> Brand guidelines <i>◆</i> Sistema visivo <i>◆</i> Palette & typography <i>◆</i> Asset multi-formato <i>◆</i></span>
+  <span>Logo design <i>◆</i> Brand guidelines <i>◆</i> Sistema visivo <i>◆</i> Palette & typography <i>◆</i> Asset multi-formato <i>◆</i></span>
+</div></div>
+
+<!-- PROBLEMA -->
+<section>
+  <div class="eyebrow" style="color:var(--magenta)">Il problema</div>
+  <h2 class="rv">Il tuo brand non<br>viene riconosciuto.</h2>
+  <div class="grid-2">
+    <div class="p-card rv"><span class="n">ERR_01</span><h3>Logo amatoriale o datato</h3><p>Un logo fatto in fretta con Canva o una vecchia rielaborazione di clipart comunica scarsa professionalità ancor prima che il cliente legga una sola parola.</p></div>
+    <div class="p-card rv"><span class="n">ERR_02</span><h3>Incoerenza visiva totale</h3><p>Font diversi su ogni canale, colori che cambiano da post a post, proporzioni sbagliate: l'utente non riconosce il brand e non si fida.</p></div>
+    <div class="p-card rv"><span class="n">ERR_03</span><h3>Nessun sistema scalabile</h3><p>Senza brand guidelines strutturate, ogni nuovo designer, collaboratore o piattaforma produce un'interpretazione differente del marchio.</p></div>
+    <div class="p-card rv"><span class="n">ERR_04</span><h3>Identità non differenziante</h3><p>Un'identità visiva generica non lascia traccia nella memoria. Il mercato è affollato: o sei riconoscibile, o sei irrilevante.</p></div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section>
+  <div class="eyebrow">La soluzione</div>
+  <h2 class="rv">VERTEX Studios<br>costruisce la tua identità.</h2>
+  <p class="lead rv">Dalla discovery al manuale completo: progettiamo ogni elemento visivo del tuo brand con un sistema coerente, scalabile e immediatamente riconoscibile.</p>
+  <div class="grid-3">
+    <div class="s-card rv"><div class="ico">✦</div><h3>Logo design professionale</h3><p>Concept multipli, raffinamento iterativo e declinazioni per ogni formato: orizzontale, verticale, icon-only, monocromatico.</p></div>
+    <div class="s-card rv"><div class="ico">▣</div><h3>Sistema visivo completo</h3><p>Palette primaria e secondaria, tipografia scalabile, gerarchia visiva e regole d'uso definite per ogni contesto.</p></div>
+    <div class="s-card rv"><div class="ico">✎</div><h3>Brand guidelines</h3><p>Manuale d'uso completo: do/don't, varianti colore, spaziature, proporzioni e istruzioni per ogni piattaforma.</p></div>
+    <div class="s-card rv"><div class="ico">◈</div><h3>Asset multi-formato</h3><p>Tutti i file sorgente (AI, EPS, SVG, PNG, PDF) ottimizzati per digitale, stampa, video e ambiente web.</p></div>
+    <div class="s-card rv"><div class="ico">⚡</div><h3>Tono di voce & naming</h3><p>Definiamo la personalità del brand: il modo in cui parla, i valori che comunica, il posizionamento rispetto ai competitor.</p></div>
+    <div class="s-card rv"><div class="ico">↗</div><h3>Brand strategy</h3><p>Analisi del mercato, dei competitor e del pubblico target per costruire un'identità differenziante e memorabile.</p></div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section>
+  <div class="eyebrow">Come funziona</div>
+  <h2 class="rv">Dalla discovery al manuale in 4 fasi.</h2>
+  <div class="steps">
+    <div class="pline"><i id="pline"></i></div>
+    <div class="step rv"><div class="num">01</div><h3>Discovery & Moodboard</h3><p>Conosciamo il tuo brand: storia, valori, pubblico, competitor e aspirazioni visive. Costruiamo un moodboard di riferimento condiviso.</p></div>
+    <div class="step rv"><div class="num">02</div><h3>Concept & Logo</h3><p>Progettiamo 3 direzioni creative diverse. Scegliamo insieme quella più centrata e la raffiniamo fino alla perfezione.</p></div>
+    <div class="step rv"><div class="num">03</div><h3>Sistema visivo</h3><p>Sviluppiamo palette, tipografia, pattern, iconografia e tutti gli elementi del brand system in versione completa.</p></div>
+    <div class="step rv"><div class="num">04</div><h3>Consegna & Guidelines</h3><p>Consegniamo tutti i file sorgente e il manuale del brand completo. Disponibili per supporto e aggiornamenti futuri.</p></div>
+  </div>
+  <p class="turnaround rv">⚡ Concept iniziale entro <b>48 ore</b>. Brand identity completa in <b>10–15 giorni lavorativi</b>.</p>
+</section>
+
+<!-- PREZZI -->
+<section id="prezzi">
+  <div class="eyebrow">Pacchetti & prezzi</div>
+  <h2 class="rv" style="text-align:center">Scegli il piano giusto per te.</h2>
+  <div class="billing rv" id="billing">
+    <button class="active" data-mode="0">Standard</button>
+    <button data-mode="1">Priority <b>+Rush</b></button>
+    <button data-mode="2">Annuale <b>−20%</b></button>
+  </div>
+  <div class="plans">
+    <div class="plan rv" data-tilt><div class="holo"></div>
+      <h3>Essential</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="350">350</span><span class="per">una tantum</span></div>
+      <div class="peritem"><b>Logo</b> + palette + file sorgente</div>
+      <div class="vbox">Logo + Color System</div>
+      <ul><li>3 concept logo iniziali</li><li>Palette primaria (5 colori)</li><li>Logo in tutti i formati</li><li>3 revisioni incluse</li><li>File AI, SVG, PNG, PDF</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Freelance · Startup early-stage · Side project · Personal brand</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan medium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Più scelto</span>
+      <h3>Studio</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="750">750</span><span class="per">una tantum</span></div>
+      <div class="peritem"><b>Brand identity</b> completa base</div>
+      <div class="vbox">Logo + Guidelines Base</div>
+      <ul><li>Tutto di Essential</li><li>Tipografia brand (2 font family)</li><li>Brand guidelines 20+ pagine</li><li>Template social base (3 formati)</li><li>5 revisioni incluse</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">PMI · Brand digitali · Creator professionisti · Agenzie in avvio</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan premium rv" data-tilt><div class="holo"></div>
+      <span class="tag">Consigliato</span>
+      <h3>Premium</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="1500">1.500</span><span class="per">una tantum</span></div>
+      <div class="peritem"><b>Brand system</b> completo avanzato</div>
+      <div class="vbox">Full Brand System</div>
+      <ul><li>Tutto di Studio</li><li>Tono di voce & brand voice</li><li>Brand guidelines 50+ pagine</li><li>10 template social personalizzati</li><li>Pattern & iconografia custom</li><li>Revisioni illimitate</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Aziende strutturate · Brand con più canali · Scale-up in crescita</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+    <div class="plan ultimate rv" data-tilt><div class="holo"></div>
+      <h3>Rebranding</h3>
+      <div class="price"><span class="cur">€</span><span class="pnum" data-base="3000">3.000</span><span class="per">una tantum</span></div>
+      <div class="peritem"><b>Rebranding completo</b> + brand strategy</div>
+      <div class="vbox">Rebranding Totale</div>
+      <ul><li>Tutto di Premium</li><li>Audit brand esistente</li><li>Brand strategy & positioning</li><li>Naming consulting (se richiesto)</li><li>20 template asset personalizzati</li><li>Account manager dedicato</li></ul>
+      <div class="ideal">Ideale per</div>
+      <div class="ideal-list">Aziende in riposizionamento · Franchise · Major brand · Istituzioni</div>
+      <a href="#contatti" class="cta-btn">Scegli questo pacchetto →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONFRONTO -->
+<section>
+  <div class="eyebrow">Confronto pacchetti</div>
+  <h2 class="rv">Ogni feature, a confronto.</h2>
+  <div class="tbl-wrap rv">
+  <table>
+    <thead><tr>
+      <th>Feature</th>
+      <th class="c-basic">Essential<small>€350</small></th>
+      <th class="c-medium">Studio<small>€750</small></th>
+      <th class="c-premium">Premium<small>€1.500</small></th>
+      <th class="c-ultimate">Rebranding<small>€3.000</small></th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Concept logo</td><td>3</td><td>3</td><td>3</td><td>5</td></tr>
+      <tr><td>Palette colori</td><td>Primaria</td><td>Primaria + secondaria</td><td>Completa</td><td>Completa</td></tr>
+      <tr><td>Tipografia brand</td><td><span class="no">—</span></td><td>2 font family</td><td>3 font family</td><td>Sistema completo</td></tr>
+      <tr><td>Brand guidelines</td><td><span class="no">—</span></td><td>20+ pag.</td><td>50+ pag.</td><td>80+ pag.</td></tr>
+      <tr><td>Template social</td><td><span class="no">—</span></td><td>3 formati</td><td>10 formati</td><td>20 formati</td></tr>
+      <tr><td>Pattern & iconografia</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Brand strategy</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Audit brand esistente</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Account manager</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="ok">✓</span></td><td><span class="ok">✓</span></td></tr>
+      <tr><td>Revisioni</td><td>3</td><td>5</td><td>Illimitate</td><td>Illimitate</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- RISPARMIO -->
+<section>
+  <div class="eyebrow" style="color:var(--green)">Perché scegliere un brand system completo</div>
+  <h2 class="rv">Un'identità forte vale<br>ogni investimento.</h2>
+  <div class="save-grid">
+    <div class="save-card rv"><h3>Riconoscibilità immediata</h3><p>Un brand system coerente aumenta la memorabilità del marchio fino al 80% rispetto a identità disorganizzate.</p></div>
+    <div class="save-card rv"><h3>Risparmio a lungo termine</h3><p>Avere guidelines precise elimina i costi di revisione continua ogni volta che un designer deve produrre materiale.</p></div>
+    <div class="save-card rv"><h3>File sorgente per sempre</h3><p>Tutti i file AI, EPS, SVG e Figma sono tuoi. Nessun lock-in: puoi lavorare con qualsiasi studio in futuro.</p></div>
+    <div class="save-card rv"><h3>Scalabilità garantita</h3><p>Il sistema è progettato per funzionare ugualmente su un biglietto da visita, un cartellone pubblicitario e uno schermo 4K.</p></div>
+    <div class="save-card gold rv"><h3>Rebranding: audit incluso</h3><p>Analizziamo la tua identità attuale per capire cosa salvare, cosa abbandonare e come comunicare il cambiamento al mercato.</p></div>
+    <div class="save-card gold rv"><h3>Rebranding: rollout assistito</h3><p>Ti affianchiamo nel cambio di identità su tutti i canali: social, web, stampa e comunicazione interna.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section>
+  <div class="eyebrow">Cosa dicono i nostri clienti</div>
+  <h2 class="rv">Risultati reali.<br>Storie vere.</h2>
+  <div class="quotes">
+    <div class="quote rv">
+      <div class="stars">★★★★★</div>
+      <p>"Il nostro brand è finalmente riconoscibile. In 6 mesi dal rebranding i clienti ci dicono che 'sembriamo un'azienda seria'. È esattamente quello che volevamo."</p>
+      <div class="who"><div class="av" style="border-color:var(--amber)">C</div><div><b>Chiara L.</b><span>CEO — Studio di Comunicazione</span></div></div>
+      <div class="kpi">+<span class="count" data-to="180">0</span>%<small>Conversioni dal sito</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--cyan)">
+      <div class="stars">★★★★★</div>
+      <p>"Avevo un logo fatto da me e nessuna coerenza visiva. Ora ho un brand system completo e ogni contenuto che pubblico si riconosce a colpo d'occhio."</p>
+      <div class="who"><div class="av" style="border-color:var(--cyan)">R</div><div><b>Roberto F.</b><span>Personal Brand — Coach & Speaker</span></div></div>
+      <div class="kpi" style="color:var(--cyan)"><span class="count" data-to="180">0</span>+<small>Brand creati</small></div>
+    </div>
+    <div class="quote rv" style="border-top-color:var(--violet)">
+      <div class="stars">★★★★★</div>
+      <p>"Le brand guidelines ci hanno permesso di lavorare con tre agenzie diverse mantenendo la stessa identità visiva su tutti i materiali. Finalmente."</p>
+      <div class="who"><div class="av" style="border-color:var(--violet)">N</div><div><b>Nord Sport Group</b><span>Gruppo Sportivo Multicanale</span></div></div>
+      <div class="kpi" style="color:var(--violet)">100%<small>Coerenza su ogni canale</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final" id="contatti">
+  <div class="eyebrow" style="justify-content:center">Inizia oggi</div>
+  <h2 class="rv">Pronto a costruire un brand<br>che viene <span style="background:linear-gradient(90deg,var(--amber),var(--magenta));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">ricordato</span>?</h2>
+  <p class="lead rv">Richiedi un moodboard gratuito: scopri il potenziale visivo del tuo brand in 24 ore.</p>
+  <div class="btn-row rv">
+    <a href="mailto:info@vert-ex.it" class="big-btn b1" data-mag>Contattaci ora</a>
+    <a href="#prezzi" class="big-btn b2" data-mag>Vedi i pacchetti</a>
+    <a href="mailto:info@vert-ex.it?subject=Moodboard%20gratuito" class="big-btn b3" data-mag>Moodboard gratuito</a>
+  </div>
+  <div class="contacts">
+    <div class="contact rv"><span>Email</span><b>info@vert-ex.it</b></div>
+    <div class="contact rv"><span>Instagram</span><b>@vertex.italia</b></div>
+    <div class="contact rv"><span>WhatsApp</span><b>+39 000 000 0000</b></div>
+    <div class="contact rv"><span>Web</span><b>www.vert-ex.it</b></div>
+  </div>
+</section>
+
+</main>
+<footer>Vertex Studios · Brand Identity Professionale · vert-ex.it</footer>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- floating background ---------- */
+const cv=document.getElementById('swatches'),cx=cv.getContext('2d');
+let W,H,chips=[];
+const COLORS=['#ffb800','#ff2e70','#8b5cf6','#09d7f5','#086cff','#00d88a'];
+function resize(){
+  W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const n=Math.min(26,Math.floor(W*H/60000));
+  chips=Array.from({length:n},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    s:24+Math.random()*46,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    rot:Math.random()*Math.PI,vr:(Math.random()-.5)*.004,
+    c:COLORS[Math.floor(Math.random()*COLORS.length)],
+    a:.06+Math.random()*.10
+  }));
+}
+resize();addEventListener('resize',resize);
+let mx=-999,my=-999;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+function tick(){
+  cx.clearRect(0,0,W,H);
+  for(const c of chips){
+    const dx=mx-c.x,dy=my-c.y,d=Math.hypot(dx,dy);
+    if(d<160){c.vx-=dx/d*.03;c.vy-=dy/d*.03}
+    c.x+=c.vx;c.y+=c.vy;c.rot+=c.vr;
+    c.vx*=.99;c.vy*=.99;
+    if(c.x<-60)c.x=W+60;if(c.x>W+60)c.x=-60;
+    if(c.y<-60)c.y=H+60;if(c.y>H+60)c.y=-60;
+    cx.save();cx.translate(c.x,c.y);cx.rotate(c.rot);
+    cx.globalAlpha=c.a;cx.fillStyle=c.c;
+    cx.fillRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.globalAlpha=c.a*2.2;cx.strokeStyle=c.c;cx.lineWidth=1;
+    cx.strokeRect(-c.s/2,-c.s/2,c.s,c.s);
+    cx.restore();
+  }
+  requestAnimationFrame(tick);
+}
+if(!reduced)tick();
+
+/* ---------- cursor ---------- */
+const dot=document.getElementById('cdot'),ring=document.getElementById('cring');
+let rx=0,ry=0,tx=0,ty=0;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;dot.style.transform=`translate(${tx}px,${ty}px) translate(-50%,-50%)`});
+(function loop(){rx+=(tx-rx)*.16;ry+=(ty-ry)*.16;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.chip,.plan,.sw,.s-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+});
+
+/* ---------- GSAP ---------- */
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#progress',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+document.querySelectorAll('.rv').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+});
+gsap.to('#pline',{width:'100%',ease:'none',scrollTrigger:{trigger:'.steps',start:'top 80%',end:'bottom 60%',scrub:.5}});
+
+/* ---------- scramble + glitch ---------- */
+const CHARS='!<>-_\\/[]{}—=+*^?#01';
+function scramble(el){
+  const final=el.dataset.txt;let frame=0;const total=Math.max(24,final.length*2.2);
+  (function step(){
+    let out='';
+    for(let i=0;i<final.length;i++){
+      const reveal=frame/total*final.length*1.4;
+      out+=i<reveal?final[i]:(final[i]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+    }
+    el.textContent=out;
+    if(frame++<total)requestAnimationFrame(step);
+    else{el.textContent=final;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)}
+  })();
+}
+if(!reduced){
+  document.querySelectorAll('.scramble').forEach((el,i)=>setTimeout(()=>scramble(el),300+i*450));
+  setInterval(()=>{const els=document.querySelectorAll('.glitch');const el=els[Math.floor(Math.random()*els.length)];el.classList.add('on');setTimeout(()=>el.classList.remove('on'),700)},6000);
+}
+
+/* ---------- counters ---------- */
+document.querySelectorAll('.count').forEach(el=>{
+  const to=parseFloat(el.dataset.to);
+  ScrollTrigger.create({trigger:el,start:'top 90%',once:true,onEnter:()=>{
+    const o={v:0};
+    gsap.to(o,{v:to,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+  }});
+});
+
+/* ---------- billing toggle (per brand identity: Standard / Priority / Retainer) ---------- */
+const disc=[1,1.1,.8];
+const perLabels=['una tantum','priority · +10%','retainer · ann.'];
+let mode=0;
+document.getElementById('billing').addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return;
+  mode=+btn.dataset.mode;
+  document.querySelectorAll('#billing button').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.pnum').forEach(el=>{
+    const target=Math.round(el.dataset.base*disc[mode]);
+    const o={v:parseFloat(el.textContent.replace(/\./g,'').replace(',','.'))||0};
+    gsap.to(o,{v:target,duration:.7,ease:'power3.out',onUpdate:()=>el.textContent=Math.round(o.v).toLocaleString('it-IT')});
+    gsap.fromTo(el,{scale:1.12,color:'#ffb800'},{scale:1,color:'#f2f5fa',duration:.7});
+  });
+  document.querySelectorAll('.price .per').forEach(el=>el.textContent=perLabels[mode]);
+});
+
+/* ---------- tilt + holo + magnetic ---------- */
+if(!reduced){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      gsap.to(card,{rotateY:(px-.5)*10,rotateX:(.5-py)*10,duration:.4,transformPerspective:900});
+      const holo=card.querySelector('.holo');if(holo)holo.style.backgroundPosition=(px*180)+'% 0';
+    });
+    card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.6,ease:'elastic.out(1,.5)'}));
+  });
+  document.querySelectorAll('.s-card').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+  document.querySelectorAll('[data-mag]').forEach(b=>{
+    b.addEventListener('mousemove',e=>{
+      const r=b.getBoundingClientRect();
+      gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.28,y:(e.clientY-r.top-r.height/2)*.28,duration:.35});
+    });
+    b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.55,ease:'elastic.out(1,.4)'}));
+  });
+}
+</script>
 </body>
 </html>
