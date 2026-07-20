@@ -13,9 +13,9 @@
     --line:rgba(255,255,255,.08);
     --text:#F2F1EE;
     --muted:#8B8B95;
-    --acc-group:#DDE3EA;   /* argento — il gruppo */
-    --acc-gaming:#7C5CFF;  /* viola elettrico — gaming */
-    --acc-studios:#E4A14B; /* ambra cinematica — studios */
+    --acc-group:#F2F1EE;   /* bianco — il gruppo */
+    --acc-gaming:#E8192C;  /* rosso — gaming */
+    --acc-studios:#009246; /* verde — studios */
     --display:'Clash Display',sans-serif;
     --body:'Satoshi',sans-serif;
   }
@@ -109,7 +109,7 @@
   .hero h1 .line>span{display:block}
   .hero h1 em{
     font-style:normal;
-    background:linear-gradient(100deg,var(--acc-group) 15%,var(--acc-gaming) 50%,var(--acc-studios) 85%);
+    background:linear-gradient(100deg,var(--acc-studios) 15%,var(--acc-group) 50%,var(--acc-gaming) 85%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .hero-sub{
@@ -313,7 +313,7 @@
   }
   .contact h2 a::after{
     content:"";position:absolute;left:0;bottom:6px;height:4px;width:100%;
-    background:linear-gradient(90deg,var(--acc-group),var(--acc-gaming),var(--acc-studios));
+    background:linear-gradient(90deg,var(--acc-studios),var(--acc-group),var(--acc-gaming));
     transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.65,0,.35,1);
   }
   .contact h2 a:hover::after{transform:scaleX(1)}
@@ -400,17 +400,17 @@
     <svg viewBox="0 0 400 400">
       <defs>
         <linearGradient id="triGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#DDE3EA" stop-opacity=".5"/>
-          <stop offset="50%" stop-color="#7C5CFF" stop-opacity=".5"/>
-          <stop offset="100%" stop-color="#E4A14B" stop-opacity=".5"/>
+          <stop offset="0%" stop-color="#009246" stop-opacity=".6"/>
+          <stop offset="50%" stop-color="#F2F1EE" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#E8192C" stop-opacity=".6"/>
         </linearGradient>
       </defs>
       <g class="tri-shape">
         <polygon points="200,40 360,320 40,320" fill="none" stroke="url(#triGrad)" stroke-width="1.2"/>
         <polygon points="200,110 310,295 90,295" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <circle class="tri-vertex v1" cx="200" cy="40" r="5" fill="#DDE3EA"/>
-        <circle class="tri-vertex v2" cx="360" cy="320" r="5" fill="#7C5CFF"/>
-        <circle class="tri-vertex v3" cx="40" cy="320" r="5" fill="#E4A14B"/>
+        <circle class="tri-vertex v1" cx="200" cy="40" r="5" fill="#009246"/>
+        <circle class="tri-vertex v2" cx="360" cy="320" r="5" fill="#F2F1EE"/>
+        <circle class="tri-vertex v3" cx="40" cy="320" r="5" fill="#E8192C"/>
       </g>
     </svg>
   </div>
@@ -451,17 +451,6 @@
   </div>
 
   <div class="brand-panels">
-    <a class="panel reveal" href="group.html">
-      <span class="panel-index">Creator &amp; Digital Talent</span>
-      <img class="panel-logo" src="public/web/images/home/vertex_group.png" alt="Vertex Group" onerror="this.style.display='none'">
-      <h3>Vertex Group</h3>
-      <p>L'ecosistema dedicato ai creator e ai talenti digitali: supporto professionale, strategie di crescita e servizi esclusivi per il mondo delle piattaforme live e dei social.</p>
-      <div class="panel-tags">
-        <span>Creator</span><span>Live</span><span>Social</span>
-      </div>
-      <span class="panel-cta">Entra <span class="arrow">↗</span></span>
-    </a>
-
     <a class="panel studios reveal" href="studios.html">
       <span class="panel-index">Il cuore creativo</span>
       <img class="panel-logo" src="public/web/images/home/vertex_studios.png" alt="Vertex Studios" onerror="this.style.display='none'">
@@ -469,6 +458,17 @@
       <p>Lo spazio dove idee, produzione, design e comunicazione prendono forma attraverso standard elevati, cura estetica e attenzione assoluta alla qualità.</p>
       <div class="panel-tags">
         <span>Produzione</span><span>Design</span><span>Comunicazione</span>
+      </div>
+      <span class="panel-cta">Entra <span class="arrow">↗</span></span>
+    </a>
+
+    <a class="panel reveal" href="group.html">
+      <span class="panel-index">Creator &amp; Digital Talent</span>
+      <img class="panel-logo" src="public/web/images/home/vertex_group.png" alt="Vertex Group" onerror="this.style.display='none'">
+      <h3>Vertex Group</h3>
+      <p>L'ecosistema dedicato ai creator e ai talenti digitali: supporto professionale, strategie di crescita e servizi esclusivi per il mondo delle piattaforme live e dei social.</p>
+      <div class="panel-tags">
+        <span>Creator</span><span>Live</span><span>Social</span>
       </div>
       <span class="panel-cta">Entra <span class="arrow">↗</span></span>
     </a>
