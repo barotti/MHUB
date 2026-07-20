@@ -196,16 +196,12 @@
   @media(max-width:1100px){.services-grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:580px){.services-grid{grid-template-columns:1fr}}
 
-  /* ---------- WORK ---------- */
-  .work-strip{
-    overflow-x:auto;display:flex;gap:2px;
-    scrollbar-width:none;padding-bottom:2px;
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  /* ---------- SVC CANVAS ---------- */
+  .svc-canvas{
+    position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;display:none;
   }
-  .work-strip::-webkit-scrollbar{display:none}
-  .work-img{flex:0 0 auto;width:clamp(260px,28vw,420px);aspect-ratio:3/4;overflow:hidden;position:relative}
-  .work-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.25,.46,.45,.94),filter .7s}
-  .work-img:hover img{transform:scale(1.05);filter:brightness(1.1)}
+  .svc .num,.svc h3,.svc p,.svc .tags,.svc .arrow{position:relative;z-index:1}
 
   /* ---------- ABOUT ---------- */
   .pillars{
@@ -335,7 +331,6 @@
   </a>
   <nav>
     <a class="nav-link" href="#services">Servizi</a>
-    <a class="nav-link" href="#work">Lavori</a>
     <a class="nav-link" href="#about">About</a>
     <a class="nav-link" href="#stats">Stats</a>
     <a class="nav-cta" href="#contact">Parliamo ↗</a>
@@ -442,26 +437,6 @@
       <div class="tags"><span>Logo Design</span><span>Brand System</span><span>Guidelines</span></div>
       <span class="arrow">↗</span>
     </a>
-  </div>
-</section>
-
-<!-- WORK -->
-<section id="work" style="padding-bottom:0;padding-left:0;padding-right:0">
-  <div style="padding:0 clamp(20px,4vw,56px) 56px">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Lavori selezionati</div>
-        <h2 class="section-title reveal">Il nostro portfolio.</h2>
-      </div>
-      <p class="reveal">Scorri per esplorare. Ogni progetto è il risultato di una visione condivisa.</p>
-    </div>
-  </div>
-  <div class="work-strip">
-    <div class="work-img"><img src="public/web/images/home/IMG_1514.png" alt="Ritratto creativo" loading="lazy" decoding="async"></div>
-    <div class="work-img"><img src="public/web/images/home/IMG_2753.png" alt="Campagna social" loading="lazy" decoding="async"></div>
-    <div class="work-img"><img src="public/web/images/home/IMG_2038.JPG" alt="Editoriale" loading="lazy" decoding="async"></div>
-    <div class="work-img"><img src="public/web/images/home/IMG_2415.JPG" alt="Brand visual" loading="lazy" decoding="async"></div>
-    <div class="work-img"><img src="public/web/images/home/IMG_2654.JPG" alt="Monocromatico" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
@@ -665,6 +640,167 @@
       if(v>=100){ clearInterval(iv); setTimeout(startPage,420); }
     },95);
   }
+})();
+</script>
+
+<script>
+/* ============================================================
+   SERVICE CARD 3D WIREFRAME HOVER ANIMATIONS
+   Each card gets a unique rotating 3D geometry on hover.
+============================================================ */
+(function(){
+  const ACCENT = '#00D67A';
+
+  const rotY = ({x,y,z},a) => ({x:x*Math.cos(a)+z*Math.sin(a),y,z:-x*Math.sin(a)+z*Math.cos(a)});
+  const rotX = ({x,y,z},a) => ({x,y:y*Math.cos(a)-z*Math.sin(a),z:y*Math.sin(a)+z*Math.cos(a)});
+  const proj = ({x,y,z},fov,cx,cy) => { const d=z+fov; return {x:cx+x*fov/d,y:cy+y*fov/d}; };
+
+  function cube(s){
+    const v=[];
+    for(const x of[-s,s])for(const y of[-s,s])for(const z of[-s,s])v.push({x,y,z});
+    const e=[];
+    for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){
+      const d=Math.abs(v[i].x-v[j].x)+Math.abs(v[i].y-v[j].y)+Math.abs(v[i].z-v[j].z);
+      if(Math.abs(d-2*s)<0.01)e.push([i,j]);
+    }
+    return{v,e};
+  }
+
+  function icosahedron(){
+    const phi=(1+Math.sqrt(5))/2,n=Math.sqrt(1+phi*phi);
+    const raw=[[-1,phi,0],[1,phi,0],[-1,-phi,0],[1,-phi,0],[0,-1,phi],[0,1,phi],[0,-1,-phi],[0,1,-phi],[phi,0,-1],[phi,0,1],[-phi,0,-1],[-phi,0,1]];
+    const v=raw.map(([x,y,z])=>({x:x/n,y:y/n,z:z/n}));
+    const faces=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];
+    const seen=new Set(),e=[];
+    for(const f of faces)for(const[a,b]of[[f[0],f[1]],[f[1],f[2]],[f[0],f[2]]]){
+      const k=Math.min(a,b)+'-'+Math.max(a,b);
+      if(!seen.has(k)){seen.add(k);e.push([a,b]);}
+    }
+    return{v,e};
+  }
+
+  function wave(S){
+    const v=[],e=[],sp=1.5/S;
+    for(let i=0;i<S;i++)for(let j=0;j<S;j++){
+      v.push({x:(i-S/2)*sp,y:0,z:(j-S/2)*sp});
+      const idx=i*S+j;
+      if(i<S-1)e.push([idx,idx+S]);
+      if(j<S-1)e.push([idx,idx+1]);
+    }
+    return{v,e};
+  }
+
+  function octahedron(s){
+    const v=[{x:s,y:0,z:0},{x:-s,y:0,z:0},{x:0,y:s,z:0},{x:0,y:-s,z:0},{x:0,y:0,z:s},{x:0,y:0,z:-s}];
+    const e=[[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]];
+    return{v,e};
+  }
+
+  function sphere(r,lat,lon){
+    const v=[],e=[];
+    for(let i=0;i<=lat;i++){
+      const th=Math.PI*i/lat;
+      for(let j=0;j<lon;j++){
+        const ph=2*Math.PI*j/lon;
+        v.push({x:r*Math.sin(th)*Math.cos(ph),y:r*Math.cos(th),z:r*Math.sin(th)*Math.sin(ph)});
+      }
+    }
+    for(let i=0;i<=lat;i++)for(let j=0;j<lon;j++){
+      e.push([i*lon+j,i*lon+(j+1)%lon]);
+      if(i<lat)e.push([i*lon+j,(i+1)*lon+j]);
+    }
+    return{v,e};
+  }
+
+  function torus(R,r,S,T){
+    const v=[],e=[];
+    for(let s=0;s<S;s++){
+      const u=2*Math.PI*s/S;
+      for(let t=0;t<T;t++){
+        const w=2*Math.PI*t/T;
+        v.push({x:(R+r*Math.cos(w))*Math.cos(u),y:r*Math.sin(w),z:(R+r*Math.cos(w))*Math.sin(u)});
+        e.push([s*T+t,s*T+(t+1)%T]);
+        e.push([s*T+t,((s+1)%S)*T+t]);
+      }
+    }
+    return{v,e};
+  }
+
+  function helix(turns,steps){
+    const v=[],e=[],n=turns*steps;
+    for(let i=0;i<=n;i++){
+      const t=i/n*Math.PI*2*turns,y=(i/n-0.5)*2;
+      v.push({x:Math.cos(t)*0.85,y,z:Math.sin(t)*0.85});
+      v.push({x:Math.cos(t+Math.PI)*0.85,y,z:Math.sin(t+Math.PI)*0.85});
+      if(i<n){
+        e.push([i*2,(i+1)*2]);e.push([i*2+1,(i+1)*2+1]);
+        if(i%2===0)e.push([i*2,i*2+1]);
+      }
+    }
+    return{v,e};
+  }
+
+  function diamond(){
+    const v=[{x:0,y:1.3,z:0},{x:0,y:-1.3,z:0},{x:.9,y:.3,z:0},{x:-.9,y:.3,z:0},{x:0,y:.3,z:.9},{x:0,y:.3,z:-.9},{x:.65,y:-.45,z:.65},{x:-.65,y:-.45,z:.65},{x:-.65,y:-.45,z:-.65},{x:.65,y:-.45,z:-.65}];
+    const e=[[0,2],[0,3],[0,4],[0,5],[2,4],[4,3],[3,5],[5,2],[2,6],[4,6],[4,7],[3,7],[3,8],[5,8],[5,9],[2,9],[1,6],[1,7],[1,8],[1,9],[6,7],[7,8],[8,9],[9,6]];
+    return{v,e};
+  }
+
+  const SHAPES=[cube(1),icosahedron(),wave(8),octahedron(1.1),sphere(1,8,10),torus(0.82,0.32,12,14),helix(3,14),diamond()];
+
+  document.querySelectorAll('.svc').forEach((card,idx)=>{
+    const shape=SHAPES[idx];
+    const cvs=document.createElement('canvas');
+    cvs.className='svc-canvas';
+    card.appendChild(cvs);
+    const ctx=cvs.getContext('2d');
+
+    let raf=null,ang=0,alpha=0,hovering=false,ready=false;
+    let W=0,H=0,cx=0,cy=0,sc=0,fov=0;
+
+    function init(){
+      W=card.offsetWidth;H=card.offsetHeight;
+      cvs.width=W;cvs.height=H;
+      cx=W/2;cy=H/2;
+      sc=Math.min(W,H)*0.27;
+      fov=sc*6;
+      cvs.style.display='block';
+      ready=true;
+    }
+
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      ang+=0.013;
+
+      if(idx===2){
+        const t=Date.now()*0.0018,S=8,sp=1.5/S;
+        for(let i=0;i<S;i++)for(let j=0;j<S;j++)
+          shape.v[i*S+j].y=Math.sin((i-S/2)*sp*3+t)*Math.cos((j-S/2)*sp*3+t)*0.32;
+      }
+
+      const pts=shape.v.map(p=>{let q=rotY(p,ang);q=rotX(q,ang*0.42);return proj({x:q.x*sc,y:q.y*sc,z:q.z*sc},fov,cx,cy);});
+
+      ctx.globalAlpha=alpha;
+      ctx.strokeStyle=ACCENT;
+      ctx.lineWidth=0.9;
+      ctx.beginPath();
+      for(const[a,b]of shape.e){if(!pts[a]||!pts[b])continue;ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);}
+      ctx.stroke();
+
+      if(hovering&&alpha<0.72)alpha=Math.min(0.72,alpha+0.055);
+      if(!hovering&&alpha>0)alpha=Math.max(0,alpha-0.045);
+
+      if(alpha>0.001)raf=requestAnimationFrame(frame);
+      else raf=null;
+    }
+
+    card.addEventListener('mouseenter',()=>{
+      hovering=true;
+      if(!ready)init();
+      if(!raf)raf=requestAnimationFrame(frame);
+    });
+    card.addEventListener('mouseleave',()=>{hovering=false;});
+  });
 })();
 </script>
 </body>
